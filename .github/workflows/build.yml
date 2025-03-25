@@ -10,13 +10,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4 # Updated to v4
 
-      - name: Buildozer dependencies
+      - name: Install dependencies
         run: |
           sudo apt update
-          sudo apt install -y git zip unzip python3-pip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev cmake libffi-dev libssl-dev automake libtinfo6
+          sudo apt install -y git zip unzip python3-pip autoconf libtool pkg-config zlib1g-dev libncurses-dev cmake libffi-dev libssl-dev automake
           pip install --user --upgrade Cython virtualenv
           pip install --user --upgrade buildozer
           echo 'export PATH=$PATH:~/.local/bin/' >> ~/.bashrc
+          libtoolize --force && aclocal && autoheader && automake --add-missing && autoreconf --force --install
 
       - name: Handle Java path
         run: |
