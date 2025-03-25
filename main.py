@@ -5,16 +5,16 @@ from kivy.uix.button import Button
 from kivy.uix.textinput import TextInput
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.popup import Popup
+from kivy.uix.scrollview import ScrollView
+from kivy.uix.anchorlayout import AnchorLayout
 from kivy.uix.checkbox import CheckBox
-import random
 from kivy.clock import Clock
 from kivy.uix.image import Image
 from kivy.uix.filechooser import FileChooserIconView
 from kivy.graphics import Color, Rectangle
+import random
 
-# Dummy storage for user data (replace with real database in production)
-USER_DATA = {}
-
+USER_DATA = {'jones': '123'}
 
 def get_sensor_data():
     """Simulate fetching sensor data"""
@@ -26,110 +26,95 @@ def get_sensor_data():
         "Water Level": random.randint(20, 100),
     }
 
-
-class DarkIndigoBoxLayout(BoxLayout):
+class BaseScreen(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         with self.canvas.before:
-            Color(0.2, 0.2, 0.6, 1)  # Dark indigo color
+            Color(0.29, 0.0, 0.51, 1)  # Dark Indigo Color
             self.rect = Rectangle(size=self.size, pos=self.pos)
-        self.bind(size=self._update_rect, pos=self._update_rect)
+        
+        self.bind(size=self.update_rect, pos=self.update_rect)
 
-    def _update_rect(self, *args):
-        self.rect.pos = self.pos
+    def update_rect(self, *args):
         self.rect.size = self.size
+        self.rect.pos = self.pos
 
+    def create_centered_layout(self):
+        scroll = ScrollView(size_hint=(1, 1))
 
-class SignupScreen(Screen):
+        # AnchorLayout to center content
+        anchor = AnchorLayout(anchor_y="center")
+
+        layout = BoxLayout(orientation='vertical', padding=20, spacing=10, size_hint=(0.8, None))
+        layout.bind(minimum_height=layout.setter('height'))
+
+        anchor.add_widget(layout)
+        scroll.add_widget(anchor)
+
+        return scroll, layout
+
+class SignupScreen(BaseScreen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        layout = DarkIndigoBoxLayout(orientation='vertical', padding=20, spacing=10)
+        scroll, layout = self.create_centered_layout()
 
-        label = Label(text="Sign Up", font_size=30, color=(0.0, 1.0, 1.0, 1), size_hint_y=None, height=40)
-        layout.add_widget(label)
-
+        layout.add_widget(Label(text="Sign Up", font_size=30, color=(0, 1, 1, 1), size_hint_y=None, height=40))
         self.username_input = TextInput(hint_text="Username", size_hint_y=None, height=40)
         layout.add_widget(self.username_input)
-
         self.password_input = TextInput(hint_text="Password", size_hint_y=None, height=40, password=True)
         layout.add_widget(self.password_input)
+        layout.add_widget(Button(text="Sign Up", size_hint_y=None, height=50, background_color=(0, 1, 1, 1), on_press=self.signup))
+        layout.add_widget(Button(text="Back to Login", size_hint_y=None, height=50, background_color=(0, 1, 1, 1), on_press=self.go_to_login))
 
-        signup_button = Button(text="Sign Up", size_hint_y=None, height=50, background_color=(0.0, 1.0, 1.0, 1),
-                               on_press=self.signup)
-        layout.add_widget(signup_button)
-
-        back_button = Button(text="Back to Login", size_hint_y=None, height=50, background_color=(0.0, 1.0, 1.0, 1),
-                             on_press=self.go_to_login)
-        layout.add_widget(back_button)
-
-        self.add_widget(layout)
+        self.add_widget(scroll)
 
     def signup(self, instance):
         username = self.username_input.text
         password = self.password_input.text
-
         if username and password:
             USER_DATA[username] = password
-            popup = Popup(title="Success", content=Label(text="Account created successfully!"), size_hint=(None, None),
-                          size=(300, 200))
-            popup.open()
+            print(USER_DATA)
+            Popup(title="Success", content=Label(text="Account created successfully!"), size_hint=(None, None), size=(300, 200)).open()
             self.manager.current = 'login'
         else:
-            popup = Popup(title="Error", content=Label(text="Please fill out both fields."), size_hint=(None, None),
-                          size=(300, 200))
-            popup.open()
+            Popup(title="Error", content=Label(text="Please fill out both fields."), size_hint=(None, None), size=(300, 200)).open()
 
     def go_to_login(self, instance):
         self.manager.current = 'login'
 
-
-class LoginScreen(Screen):
+class LoginScreen(BaseScreen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        layout = DarkIndigoBoxLayout(orientation='vertical', padding=20, spacing=10)
+        scroll, layout = self.create_centered_layout()
 
-        label = Label(text="Login", font_size=30, color=(0.0, 1.0, 1.0, 1), size_hint_y=None, height=40)
-        layout.add_widget(label)
-
+        layout.add_widget(Label(text="Login", font_size=30, color=(0, 1, 1, 1), size_hint_y=None, height=40))
         self.username_input = TextInput(hint_text="Username", size_hint_y=None, height=40)
         layout.add_widget(self.username_input)
-
         self.password_input = TextInput(hint_text="Password", size_hint_y=None, height=40, password=True)
         layout.add_widget(self.password_input)
+        layout.add_widget(Button(text="Login", size_hint_y=None, height=50, background_color=(0, 1, 1, 1), on_press=self.login))
+        layout.add_widget(Button(text="Sign Up", size_hint_y=None, height=50, background_color=(0, 1, 1, 1), on_press=self.go_to_signup))
 
-        login_button = Button(text="Login", size_hint_y=None, height=50, background_color=(0.0, 1.0, 1.0, 1),
-                              on_press=self.login)
-        layout.add_widget(login_button)
-
-        signup_button = Button(text="Sign Up", size_hint_y=None, height=50, background_color=(0.0, 1.0, 1.0, 1),
-                               on_press=self.go_to_signup)
-        layout.add_widget(signup_button)
-
-        self.add_widget(layout)
+        self.add_widget(scroll)
 
     def login(self, instance):
         username = self.username_input.text
         password = self.password_input.text
-
         if username in USER_DATA and USER_DATA[username] == password:
-            popup = Popup(title="Success", content=Label(text="Login successful!"), size_hint=(None, None),
-                          size=(300, 200))
+            popup = Popup(title="Success", content=Label(text="Login successful!"), size_hint=(None, None), size=(300, 200))
             popup.open()
             self.manager.current = 'user_agreement'
         else:
-            popup = Popup(title="Error", content=Label(text="Invalid credentials. Try again."), size_hint=(None, None),
-                          size=(300, 200))
-            popup.open()
+            Popup(title="Error", content=Label(text="Invalid credentials. Try again."), size_hint=(None, None), size=(300, 200)).open()
 
     def go_to_signup(self, instance):
         self.manager.current = 'signup'
 
-
-class UserAgreementScreen(Screen):
+class UserAgreementScreen(BaseScreen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-        layout = DarkIndigoBoxLayout(orientation='vertical', padding=20, spacing=10)
+        scroll, layout = self.create_centered_layout()
         label = Label(text="User Agreement", font_size=30, color=(0.0, 1.0, 1.0, 1), size_hint_y=None, height=40)
         layout.add_widget(label)
 
@@ -137,17 +122,25 @@ class UserAgreementScreen(Screen):
         By continuing, you agree to the terms and conditions of this app. 
         Please read them carefully.
         """
-        terms_label = Label(text=agreement_text, font_size=18, size_hint_y=None, height=200, color=(0.7, 0.7, 0.7, 1))
-        layout.add_widget(terms_label)
+        # terms_label = Label(text=agreement_text, font_size=18, size_hint_y=None, height=100, color=(0.7, 0.7, 0.7, 1))
+        # layout.add_widget(terms_label)
 
-        self.agree_checkbox = CheckBox(size_hint=(None, None), size=(30, 30), color=(0.0, 1.0, 1.0, 1))
-        layout.add_widget(self.agree_checkbox)
+        # Create a horizontal layout for the checkbox and text
+        checkbox_layout = BoxLayout(orientation="horizontal", size_hint_y=None, height=50, spacing=5)
+
+        self.agree_checkbox = CheckBox(size_hint=(None, None), size=(30, 30))
+        checkbox_text = Label(text=agreement_text, font_size=16, color=(0.7, 0.7, 0.7, 1), size_hint_y=None, height=30)
+
+        checkbox_layout.add_widget(self.agree_checkbox)
+        checkbox_layout.add_widget(checkbox_text)
+
+        layout.add_widget(checkbox_layout)
 
         agree_button = Button(text="I Agree", size_hint_y=None, height=50, background_color=(0.0, 1.0, 1.0, 1),
                               on_press=self.confirm_agreement)
         layout.add_widget(agree_button)
 
-        self.add_widget(layout)
+        self.add_widget(scroll)
 
     def confirm_agreement(self, instance):
         if self.agree_checkbox.active:
@@ -159,11 +152,11 @@ class UserAgreementScreen(Screen):
             popup.open()
 
 
-class MonitoringScreen(Screen):
+class MonitoringScreen(BaseScreen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-        layout = DarkIndigoBoxLayout(orientation='vertical', padding=20, spacing=10)
+        scroll, layout = self.create_centered_layout()
 
         sensor_label = Label(text="Hydroponics Monitoring", font_size=30, color=(0.0, 1.0, 1.0, 1), size_hint_y=None,
                              height=40)
@@ -195,7 +188,7 @@ class MonitoringScreen(Screen):
                                          background_color=(0.0, 1.0, 1.0, 1), on_press=self.go_to_image_processing)
         layout.add_widget(image_processing_button)
 
-        self.add_widget(layout)
+        self.add_widget(scroll)
 
         Clock.schedule_interval(self.update_sensor_data, 2)
 
@@ -234,10 +227,11 @@ class MonitoringScreen(Screen):
         self.manager.current = 'image_processing'
 
 
-class SensorPage(Screen):
-    def __init__(self, sensor_name, **kwargs):
-        super().__init__(**kwargs)
-        layout = DarkIndigoBoxLayout(orientation='vertical', padding=20, spacing=10)
+class SensorPage(BaseScreen):
+    def __init__(self, name, sensor_name, **kwargs):
+        self.sensor_name = sensor_name
+        super().__init__(name=name, **kwargs)
+        scroll, layout = self.create_centered_layout()
 
         label = Label(text=sensor_name, font_size=30, color=(0.0, 1.0, 1.0, 1), size_hint_y=None, height=40)
         layout.add_widget(label)
@@ -252,17 +246,17 @@ class SensorPage(Screen):
                              background_color=(0.0, 1.0, 1.0, 1), on_press=self.go_back)
         layout.add_widget(back_button)
 
-        self.add_widget(layout)
+        self.add_widget(scroll)
 
     def go_back(self, instance):
         self.manager.current = 'monitoring'
 
 
-class ImageProcessingScreen(Screen):
+class ImageProcessingScreen(BaseScreen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-        layout = DarkIndigoBoxLayout(orientation='vertical', padding=20, spacing=10)
+        scroll, layout = self.create_centered_layout()
 
         label = Label(text="Image Processing", font_size=30, color=(0.0, 1.0, 1.0, 1), size_hint_y=None, height=40)
         layout.add_widget(label)
@@ -277,7 +271,7 @@ class ImageProcessingScreen(Screen):
                                 on_press=self.process_images)
         layout.add_widget(process_button)
 
-        self.add_widget(layout)
+        self.add_widget(scroll)
 
     def process_images(self, instance):
         selected_files = self.filechooser.selection
@@ -288,10 +282,9 @@ class ImageProcessingScreen(Screen):
         else:
             self.image.source = selected_files[0]
 
-
+# Main App setup
 class ScreenManagement(ScreenManager):
     pass
-
 
 class MyApp(App):
     def build(self):
@@ -311,7 +304,6 @@ class MyApp(App):
         sm.current = 'login'
 
         return sm
-
 
 if __name__ == '__main__':
     MyApp().run()
