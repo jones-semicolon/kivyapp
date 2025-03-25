@@ -12,9 +12,11 @@ from kivy.clock import Clock
 from kivy.uix.image import Image
 from kivy.uix.filechooser import FileChooserIconView
 from kivy.graphics import Color, Rectangle
+from kivy.core.window import Window
 import random
 
-USER_DATA = {'jones': '123'}
+USER_DATA = {"jones": "123"}
+
 
 def get_sensor_data():
     """Simulate fetching sensor data"""
@@ -26,13 +28,14 @@ def get_sensor_data():
         "Water Level": random.randint(20, 100),
     }
 
+
 class BaseScreen(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        # Responsive background rectangle
         with self.canvas.before:
-            Color(0.29, 0.0, 0.51, 1)  # Dark Indigo Color
+            Color(0.29, 0.0, 0.51, 1)  # Dark Indigo Background
             self.rect = Rectangle(size=self.size, pos=self.pos)
-        
         self.bind(size=self.update_rect, pos=self.update_rect)
 
     def update_rect(self, *args):
@@ -41,30 +44,59 @@ class BaseScreen(Screen):
 
     def create_centered_layout(self):
         scroll = ScrollView(size_hint=(1, 1))
-
-        # AnchorLayout to center content
         anchor = AnchorLayout(anchor_y="center")
 
-        layout = BoxLayout(orientation='vertical', padding=20, spacing=10, size_hint=(0.8, None))
-        layout.bind(minimum_height=layout.setter('height'))
+        # Use a responsive width factor based on current window width
+        width_factor = 0.9 if Window.width < 600 else 0.7
+        layout = BoxLayout(
+            orientation="vertical",
+            padding=[Window.width * 0.05, Window.height * 0.02],  # dynamic padding
+            spacing=Window.height * 0.02,  # dynamic spacing
+            size_hint=(width_factor, None),
+        )
+        layout.bind(minimum_height=layout.setter("height"))
 
         anchor.add_widget(layout)
         scroll.add_widget(anchor)
-
         return scroll, layout
+
 
 class SignupScreen(BaseScreen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         scroll, layout = self.create_centered_layout()
 
-        layout.add_widget(Label(text="Sign Up", font_size=30, color=(0, 1, 1, 1), size_hint_y=None, height=40))
-        self.username_input = TextInput(hint_text="Username", size_hint_y=None, height=40)
+        # Responsive font sizes using Window.height as reference
+        layout.add_widget(
+            Label(
+                text="Sign Up",
+                font_size=Window.height * 0.04,
+                color=(0, 1, 1, 1),
+                size_hint_y=0.1,
+            )
+        )
+        self.username_input = TextInput(hint_text="Username", size_hint_y=0.1)
         layout.add_widget(self.username_input)
-        self.password_input = TextInput(hint_text="Password", size_hint_y=None, height=40, password=True)
+        self.password_input = TextInput(
+            hint_text="Password", size_hint_y=0.1, password=True
+        )
         layout.add_widget(self.password_input)
-        layout.add_widget(Button(text="Sign Up", size_hint_y=None, height=50, background_color=(0, 1, 1, 1), on_press=self.signup))
-        layout.add_widget(Button(text="Back to Login", size_hint_y=None, height=50, background_color=(0, 1, 1, 1), on_press=self.go_to_login))
+        layout.add_widget(
+            Button(
+                text="Sign Up",
+                size_hint_y=0.12,
+                background_color=(0, 1, 1, 1),
+                on_press=self.signup,
+            )
+        )
+        layout.add_widget(
+            Button(
+                text="Back to Login",
+                size_hint_y=0.12,
+                background_color=(0, 1, 1, 1),
+                on_press=self.go_to_login,
+            )
+        )
 
         self.add_widget(scroll)
 
@@ -73,27 +105,60 @@ class SignupScreen(BaseScreen):
         password = self.password_input.text
         if username and password:
             USER_DATA[username] = password
-            print(USER_DATA)
-            Popup(title="Success", content=Label(text="Account created successfully!"), size_hint=(None, None), size=(300, 200)).open()
-            self.manager.current = 'login'
+            Popup(
+                title="Success",
+                content=Label(text="Account created successfully!"),
+                size_hint=(None, None),
+                size=(300, 200),
+            ).open()
+            self.manager.current = "login"
         else:
-            Popup(title="Error", content=Label(text="Please fill out both fields."), size_hint=(None, None), size=(300, 200)).open()
+            Popup(
+                title="Error",
+                content=Label(text="Please fill out both fields."),
+                size_hint=(None, None),
+                size=(300, 200),
+            ).open()
 
     def go_to_login(self, instance):
-        self.manager.current = 'login'
+        self.manager.current = "login"
+
 
 class LoginScreen(BaseScreen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         scroll, layout = self.create_centered_layout()
 
-        layout.add_widget(Label(text="Login", font_size=30, color=(0, 1, 1, 1), size_hint_y=None, height=40))
-        self.username_input = TextInput(hint_text="Username", size_hint_y=None, height=40)
+        layout.add_widget(
+            Label(
+                text="Login",
+                font_size=Window.height * 0.04,
+                color=(0, 1, 1, 1),
+                size_hint_y=0.1,
+            )
+        )
+        self.username_input = TextInput(hint_text="Username", size_hint_y=0.1)
         layout.add_widget(self.username_input)
-        self.password_input = TextInput(hint_text="Password", size_hint_y=None, height=40, password=True)
+        self.password_input = TextInput(
+            hint_text="Password", size_hint_y=0.1, password=True
+        )
         layout.add_widget(self.password_input)
-        layout.add_widget(Button(text="Login", size_hint_y=None, height=50, background_color=(0, 1, 1, 1), on_press=self.login))
-        layout.add_widget(Button(text="Sign Up", size_hint_y=None, height=50, background_color=(0, 1, 1, 1), on_press=self.go_to_signup))
+        layout.add_widget(
+            Button(
+                text="Login",
+                size_hint_y=0.12,
+                background_color=(0, 1, 1, 1),
+                on_press=self.login,
+            )
+        )
+        layout.add_widget(
+            Button(
+                text="Sign Up",
+                size_hint_y=0.12,
+                background_color=(0, 1, 1, 1),
+                on_press=self.go_to_signup,
+            )
+        )
 
         self.add_widget(scroll)
 
@@ -101,100 +166,152 @@ class LoginScreen(BaseScreen):
         username = self.username_input.text
         password = self.password_input.text
         if username in USER_DATA and USER_DATA[username] == password:
-            popup = Popup(title="Success", content=Label(text="Login successful!"), size_hint=(None, None), size=(300, 200))
-            popup.open()
-            self.manager.current = 'user_agreement'
+            Popup(
+                title="Success",
+                content=Label(text="Login successful!"),
+                size_hint=(None, None),
+                size=(300, 200),
+            ).open()
+            self.manager.current = "user_agreement"
         else:
-            Popup(title="Error", content=Label(text="Invalid credentials. Try again."), size_hint=(None, None), size=(300, 200)).open()
+            Popup(
+                title="Error",
+                content=Label(text="Invalid credentials. Try again."),
+                size_hint=(None, None),
+                size=(300, 200),
+            ).open()
 
     def go_to_signup(self, instance):
-        self.manager.current = 'signup'
+        self.manager.current = "signup"
+
 
 class UserAgreementScreen(BaseScreen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-
         scroll, layout = self.create_centered_layout()
-        label = Label(text="User Agreement", font_size=30, color=(0.0, 1.0, 1.0, 1), size_hint_y=None, height=40)
-        layout.add_widget(label)
 
-        agreement_text = """
-        By continuing, you agree to the terms and conditions of this app. 
-        Please read them carefully.
-        """
-        # terms_label = Label(text=agreement_text, font_size=18, size_hint_y=None, height=100, color=(0.7, 0.7, 0.7, 1))
-        # layout.add_widget(terms_label)
+        layout.add_widget(
+            Label(
+                text="User Agreement",
+                font_size=Window.height * 0.04,
+                color=(0.0, 1.0, 1.0, 1),
+                size_hint_y=0.1,
+            )
+        )
 
-        # Create a horizontal layout for the checkbox and text
-        checkbox_layout = BoxLayout(orientation="horizontal", size_hint_y=None, height=50, spacing=5)
+        agreement_text = (
+            "By continuing, you agree to the terms and conditions of this app. "
+            "Please read them carefully."
+        )
 
+        # Horizontal layout for the checkbox and text
+        checkbox_layout = BoxLayout(
+            orientation="horizontal", size_hint_y=0.1, spacing=5
+        )
         self.agree_checkbox = CheckBox(size_hint=(None, None), size=(30, 30))
-        checkbox_text = Label(text=agreement_text, font_size=16, color=(0.7, 0.7, 0.7, 1), size_hint_y=None, height=30)
-
+        checkbox_text = Label(
+            text=agreement_text,
+            font_size=Window.height * 0.03,
+            color=(0.7, 0.7, 0.7, 1),
+        )
         checkbox_layout.add_widget(self.agree_checkbox)
         checkbox_layout.add_widget(checkbox_text)
 
         layout.add_widget(checkbox_layout)
 
-        agree_button = Button(text="I Agree", size_hint_y=None, height=50, background_color=(0.0, 1.0, 1.0, 1),
-                              on_press=self.confirm_agreement)
-        layout.add_widget(agree_button)
-
+        layout.add_widget(
+            Button(
+                text="I Agree",
+                size_hint_y=0.12,
+                background_color=(0.0, 1.0, 1.0, 1),
+                on_press=self.confirm_agreement,
+            )
+        )
         self.add_widget(scroll)
 
     def confirm_agreement(self, instance):
         if self.agree_checkbox.active:
-            popup = Popup(title="Success", content=Label(text="Agreement confirmed! You can now proceed."), size_hint=(None, None), size=(300, 200))
-            popup.open()
-            self.manager.current = 'monitoring'
+            Popup(
+                title="Success",
+                content=Label(text="Agreement confirmed! You can now proceed."),
+                size_hint=(None, None),
+                size=(300, 200),
+            ).open()
+            self.manager.current = "monitoring"
         else:
-            popup = Popup(title="Error", content=Label(text="You must agree to the terms to proceed."), size_hint=(None, None), size=(300, 200))
-            popup.open()
+            Popup(
+                title="Error",
+                content=Label(text="You must agree to the terms to proceed."),
+                size_hint=(None, None),
+                size=(300, 200),
+            ).open()
 
 
 class MonitoringScreen(BaseScreen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-
         scroll, layout = self.create_centered_layout()
 
-        sensor_label = Label(text="Hydroponics Monitoring", font_size=30, color=(0.0, 1.0, 1.0, 1), size_hint_y=None,
-                             height=40)
-        layout.add_widget(sensor_label)
-
-        self.tds_label = Label(text="TDS Sensor: 1050 PPM", font_size=18, size_hint_y=None, height=40,
-                               color=(0.7, 0.7, 0.7, 1))
+        layout.add_widget(
+            Label(
+                text="Hydroponics Monitoring",
+                font_size=Window.height * 0.04,
+                color=(0.0, 1.0, 1.0, 1),
+                size_hint_y=0.1,
+            )
+        )
+        self.tds_label = Label(
+            text="TDS Sensor: 1050 PPM",
+            font_size=Window.height * 0.03,
+            color=(0.7, 0.7, 0.7, 1),
+            size_hint_y=0.1,
+        )
         layout.add_widget(self.tds_label)
-
-        self.nutrients_label = Label(text="Nutrients: 1200 PPM", font_size=18, size_hint_y=None, height=40,
-                                     color=(0.7, 0.7, 0.7, 1))
+        self.nutrients_label = Label(
+            text="Nutrients: 1200 PPM",
+            font_size=Window.height * 0.03,
+            color=(0.7, 0.7, 0.7, 1),
+            size_hint_y=0.1,
+        )
         layout.add_widget(self.nutrients_label)
-
-        self.ph_label = Label(text="pH Level: 6.5", font_size=18, size_hint_y=None, height=40, color=(0.7, 0.7, 0.7, 1))
+        self.ph_label = Label(
+            text="pH Level: 6.5",
+            font_size=Window.height * 0.03,
+            color=(0.7, 0.7, 0.7, 1),
+            size_hint_y=0.1,
+        )
         layout.add_widget(self.ph_label)
-
-        self.humidity_label = Label(text="Humidity: 85%", font_size=18, size_hint_y=None, height=40,
-                                    color=(0.7, 0.7, 0.7, 1))
+        self.humidity_label = Label(
+            text="Humidity: 85%",
+            font_size=Window.height * 0.03,
+            color=(0.7, 0.7, 0.7, 1),
+            size_hint_y=0.1,
+        )
         layout.add_widget(self.humidity_label)
-
-        self.water_level_label = Label(text="Water Level: 50L", font_size=18, size_hint_y=None, height=40,
-                                       color=(0.7, 0.7, 0.7, 1))
+        self.water_level_label = Label(
+            text="Water Level: 50L",
+            font_size=Window.height * 0.03,
+            color=(0.7, 0.7, 0.7, 1),
+            size_hint_y=0.1,
+        )
         layout.add_widget(self.water_level_label)
 
-        self.sensor_buttons = BoxLayout(size_hint_y=None, height=50)
+        self.sensor_buttons = BoxLayout(size_hint_y=0.1, spacing=5)
         layout.add_widget(self.sensor_buttons)
 
-        image_processing_button = Button(text="Process Image", size_hint_y=None, height=50,
-                                         background_color=(0.0, 1.0, 1.0, 1), on_press=self.go_to_image_processing)
+        image_processing_button = Button(
+            text="Process Image",
+            size_hint_y=0.12,
+            background_color=(0.0, 1.0, 1.0, 1),
+            on_press=self.go_to_image_processing,
+        )
         layout.add_widget(image_processing_button)
 
         self.add_widget(scroll)
-
         Clock.schedule_interval(self.update_sensor_data, 2)
 
     def update_sensor_data(self, dt):
         sensor_data = get_sensor_data()
-
         self.tds_label.text = f"TDS Sensor: {sensor_data['TDS']} PPM"
         self.nutrients_label.text = f"Nutrients: {sensor_data['Nutrients']} PPM"
         self.ph_label.text = f"pH Level: {sensor_data['pH']}"
@@ -202,29 +319,37 @@ class MonitoringScreen(BaseScreen):
         self.water_level_label.text = f"Water Level: {sensor_data['Water Level']}L"
 
         self.sensor_buttons.clear_widgets()
-        self.sensor_buttons.add_widget(Button(text="TDS Sensor", on_press=self.go_to_tds))
-        self.sensor_buttons.add_widget(Button(text="Nutrients", on_press=self.go_to_nutrients))
+        self.sensor_buttons.add_widget(
+            Button(text="TDS Sensor", on_press=self.go_to_tds)
+        )
+        self.sensor_buttons.add_widget(
+            Button(text="Nutrients", on_press=self.go_to_nutrients)
+        )
         self.sensor_buttons.add_widget(Button(text="pH Level", on_press=self.go_to_ph))
-        self.sensor_buttons.add_widget(Button(text="Humidity", on_press=self.go_to_humidity))
-        self.sensor_buttons.add_widget(Button(text="Water Level", on_press=self.go_to_water_level))
+        self.sensor_buttons.add_widget(
+            Button(text="Humidity", on_press=self.go_to_humidity)
+        )
+        self.sensor_buttons.add_widget(
+            Button(text="Water Level", on_press=self.go_to_water_level)
+        )
 
     def go_to_tds(self, instance):
-        self.manager.current = 'tds'
+        self.manager.current = "tds"
 
     def go_to_nutrients(self, instance):
-        self.manager.current = 'nutrients'
+        self.manager.current = "nutrients"
 
     def go_to_ph(self, instance):
-        self.manager.current = 'ph'
+        self.manager.current = "ph"
 
     def go_to_humidity(self, instance):
-        self.manager.current = 'humidity'
+        self.manager.current = "humidity"
 
     def go_to_water_level(self, instance):
-        self.manager.current = 'water_level'
+        self.manager.current = "water_level"
 
     def go_to_image_processing(self, instance):
-        self.manager.current = 'image_processing'
+        self.manager.current = "image_processing"
 
 
 class SensorPage(BaseScreen):
@@ -232,34 +357,50 @@ class SensorPage(BaseScreen):
         self.sensor_name = sensor_name
         super().__init__(name=name, **kwargs)
         scroll, layout = self.create_centered_layout()
-
-        label = Label(text=sensor_name, font_size=30, color=(0.0, 1.0, 1.0, 1), size_hint_y=None, height=40)
-        layout.add_widget(label)
+        layout.add_widget(
+            Label(
+                text=sensor_name,
+                font_size=Window.height * 0.04,
+                color=(0.0, 1.0, 1.0, 1),
+                size_hint_y=0.1,
+            )
+        )
 
         sensor_data = get_sensor_data()
-
-        sensor_value_label = Label(text=f"{sensor_name} Value: {sensor_data[sensor_name]}", font_size=18,
-                                   size_hint_y=None, height=40, color=(0.7, 0.7, 0.7, 1))
+        sensor_value_label = Label(
+            text=f"{sensor_name} Value: {sensor_data[sensor_name]}",
+            font_size=Window.height * 0.03,
+            color=(0.7, 0.7, 0.7, 1),
+            size_hint_y=0.1,
+        )
         layout.add_widget(sensor_value_label)
-
-        back_button = Button(text="Back to Monitoring", size_hint_y=None, height=50,
-                             background_color=(0.0, 1.0, 1.0, 1), on_press=self.go_back)
-        layout.add_widget(back_button)
-
+        layout.add_widget(
+            Button(
+                text="Back to Monitoring",
+                size_hint_y=0.12,
+                background_color=(0.0, 1.0, 1.0, 1),
+                on_press=self.go_back,
+            )
+        )
         self.add_widget(scroll)
 
     def go_back(self, instance):
-        self.manager.current = 'monitoring'
+        self.manager.current = "monitoring"
 
 
 class ImageProcessingScreen(BaseScreen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-
         scroll, layout = self.create_centered_layout()
 
-        label = Label(text="Image Processing", font_size=30, color=(0.0, 1.0, 1.0, 1), size_hint_y=None, height=40)
-        layout.add_widget(label)
+        layout.add_widget(
+            Label(
+                text="Image Processing",
+                font_size=Window.height * 0.04,
+                color=(0.0, 1.0, 1.0, 1),
+                size_hint_y=0.1,
+            )
+        )
 
         self.image = Image(size_hint=(1, 1))
         layout.add_widget(self.image)
@@ -267,43 +408,50 @@ class ImageProcessingScreen(BaseScreen):
         self.filechooser = FileChooserIconView(size_hint=(1, 0.6))
         layout.add_widget(self.filechooser)
 
-        process_button = Button(text="Process Images", size_hint_y=None, height=50, background_color=(0.0, 1.0, 1.0, 1),
-                                on_press=self.process_images)
-        layout.add_widget(process_button)
-
+        layout.add_widget(
+            Button(
+                text="Process Images",
+                size_hint_y=0.12,
+                background_color=(0.0, 1.0, 1.0, 1),
+                on_press=self.process_images,
+            )
+        )
         self.add_widget(scroll)
 
     def process_images(self, instance):
         selected_files = self.filechooser.selection
         if len(selected_files) < 5:
-            popup = Popup(title="Error", content=Label(text="Please select exactly 5 images."), size_hint=(None, None),
-                          size=(300, 200))
-            popup.open()
+            Popup(
+                title="Error",
+                content=Label(text="Please select exactly 5 images."),
+                size_hint=(None, None),
+                size=(300, 200),
+            ).open()
         else:
             self.image.source = selected_files[0]
 
-# Main App setup
+
+# Main Screen Manager and App class
 class ScreenManagement(ScreenManager):
     pass
+
 
 class MyApp(App):
     def build(self):
         sm = ScreenManagement()
-
-        sm.add_widget(SignupScreen(name='signup'))
-        sm.add_widget(LoginScreen(name='login'))
-        sm.add_widget(UserAgreementScreen(name='user_agreement'))
-        sm.add_widget(MonitoringScreen(name='monitoring'))
-        sm.add_widget(SensorPage(name='tds', sensor_name="TDS"))
-        sm.add_widget(SensorPage(name='nutrients', sensor_name="Nutrients"))
-        sm.add_widget(SensorPage(name='ph', sensor_name="pH"))
-        sm.add_widget(SensorPage(name='humidity', sensor_name="Humidity"))
-        sm.add_widget(SensorPage(name='water_level', sensor_name="Water Level"))
-        sm.add_widget(ImageProcessingScreen(name='image_processing'))
-
-        sm.current = 'login'
-
+        sm.add_widget(SignupScreen(name="signup"))
+        sm.add_widget(LoginScreen(name="login"))
+        sm.add_widget(UserAgreementScreen(name="user_agreement"))
+        sm.add_widget(MonitoringScreen(name="monitoring"))
+        sm.add_widget(SensorPage(name="tds", sensor_name="TDS"))
+        sm.add_widget(SensorPage(name="nutrients", sensor_name="Nutrients"))
+        sm.add_widget(SensorPage(name="ph", sensor_name="pH"))
+        sm.add_widget(SensorPage(name="humidity", sensor_name="Humidity"))
+        sm.add_widget(SensorPage(name="water_level", sensor_name="Water Level"))
+        sm.add_widget(ImageProcessingScreen(name="image_processing"))
+        sm.current = "login"
         return sm
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     MyApp().run()
