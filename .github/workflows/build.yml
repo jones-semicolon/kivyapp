@@ -1,14 +1,20 @@
-name: Build APK
-on: [push]
+name: Build and Release APK
+
+on:
+  push:
+    tags:
+      - "v1.0.0" # Triggers only when a tag starting with "v" is pushed (e.g., v1.0.0)
+
 jobs:
   build-android:
     name: Build for Android
     runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4 # Updated to v4
 
-      - name: Install dependencies
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Install Dependencies
         run: |
           sudo apt update
           sudo apt install -y git zip unzip python3-pip autoconf libtool pkg-config zlib1g-dev libncurses-dev cmake libffi-dev libssl-dev automake libltdl-dev
@@ -16,15 +22,27 @@ jobs:
           pip install --user --upgrade buildozer
           echo 'export PATH=$PATH:~/.local/bin/' >> ~/.bashrc
 
-      - name: Handle Java path
+      - name: Build APK
         run: |
           export JAVA_HOME=/usr/lib/jvm/temurin-17-jdk-amd64
           sudo update-java-alternatives --set ${JAVA_HOME}
           export PATH=$JAVA_HOME/bin:$PATH
           yes | buildozer -v android debug
 
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4 # Updated to v4
+      - name: Upload APK as Artifact
+        uses: actions/upload-artifact@v4
         with:
-          name: package
+          name: myapp-apk
           path: bin/*.apk
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: Release ${{ github.ref_name }}
+          body: "Automated release for version ${{ github.ref_name }}"
+          draft: false
+          prerelease: false
+          files: bin/*.apk
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
