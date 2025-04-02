@@ -1,0 +1,138 @@
+[INFO   ] Logger: Record log in /storage/emulated/0/Projects/kivyapp2.0/.kivy/logs/kivy_25-04-01_65.txt
+[INFO   ] Kivy: v2.2.1
+[INFO   ] Kivy: Installed at "/data/user/0/ru.iiec.pydroid3/files/aarch64-linux-android/lib/python3.11/site-packages/kivy/__init__.py"
+[INFO   ] Python: v3.11.4 (main, Sep 30 2023, 10:54:38) [GCC 11.4.0]
+[INFO   ] Python: Interpreter at "/data/user/0/ru.iiec.pydroid3/files/aarch64-linux-android/bin/python3"
+[INFO   ] Logger: Purge log fired. Processing...
+[INFO   ] Logger: Purge finished!
+[INFO   ] Factory: 190 symbols loaded
+[INFO   ] KivyMD: 1.2.0, git-Unknown, 2025-03-29 (installed at "/data/user/0/ru.iiec.pydroid3/files/aarch64-linux-android/lib/python3.11/site-packages/kivymd/__init__.py")
+[WARNING] KivyMD: Version 1.2.0 is deprecated and is no longer supported. Use KivyMD version 2.0.0 from the master branch (pip install https://github.com/kivymd/KivyMD/archive/master.zip)
+[INFO   ] Image: Providers: img_tex, img_dds, img_sdl2, img_pil (img_ffpyplayer ignored)
+[INFO   ] Text: Provider: sdl2
+[INFO   ] Window: Provider: sdl2
+[INFO   ] GL: Using the "OpenGL ES 2" graphics system
+[INFO   ] GL: Backend used <sdl2>
+[INFO   ] GL: OpenGL version <b'OpenGL ES 3.2 v1.r32p1-01eac0.efd03ef21f136842c0935bd4f493fe81'>
+[INFO   ] GL: OpenGL vendor <b'ARM'>
+[INFO   ] GL: OpenGL renderer <b'Mali-G77 MC9'>
+[INFO   ] GL: OpenGL parsed version: 3, 2
+[INFO   ] GL: Texture max size <16383>
+[INFO   ] GL: Texture max units <16>
+[INFO   ] Window: auto add sdl2 input provider
+[INFO   ] Window: virtual keyboard not allowed, single mode, not docked
+[INFO   ] Clipboard: Provider: android
+[INFO   ] GL: NPOT texture support is available
+[WARNING] stderr: Traceback (most recent call last):
+[WARNING] stderr:   File "/data/user/0/ru.iiec.pydroid3/files/aarch64-linux-android/lib/python3.11/site-packages/kivy/lang/builder.py", line 240, in create_handler
+[WARNING] stderr:     return eval(value, idmap), bound_list
+[WARNING] stderr:            ^^^^^^^^^^^^^^^^^^
+[WARNING] stderr:   File "/storage/emulated/0/Projects/kivyapp2.0/card.kv", line 52, in <module>
+[WARNING] stderr:     value: root.progress #50
+[WARNING] stderr: 
+[WARNING] stderr:   File "kivy/weakproxy.pyx", line 32, in kivy.weakproxy.WeakProxy.__getattr__
+[WARNING] stderr: AttributeError: 'CustomCard' object has no attribute 'progress'
+[WARNING] stderr: 
+[WARNING] stderr: During handling of the above exception, another exception occurred:
+[WARNING] stderr: 
+[WARNING] stderr: Traceback (most recent call last):
+[WARNING] stderr:   File "/data/user/0/ru.iiec.pydroid3/files/aarch64-linux-android/lib/python3.11/site-packages/kivy/lang/builder.py", line 694, in _apply_rule
+[WARNING] stderr:     value, bound = create_handler(
+[WARNING] stderr:                    ^^^^^^^^^^^^^^^
+[WARNING] stderr:   File "/data/user/0/ru.iiec.pydroid3/files/aarch64-linux-android/lib/python3.11/site-packages/kivy/lang/builder.py", line 243, in create_handler
+[WARNING] stderr:     raise BuilderException(rule.ctx, rule.line,
+[WARNING] stderr: kivy.lang.builder.BuilderException: Parser: File "/storage/emulated/0/Projects/kivyapp2.0/card.kv", line 52:
+[WARNING] stderr: ...
+[WARNING] stderr:      50:                padding: 0, 0, 0, dp(5)
+[WARNING] stderr:      51:                MDProgressBar:
+[WARNING] stderr: >>   52:                    value: root.progress #50
+[WARNING] stderr:      53:                    color: root.icon.text_color 
+[WARNING] stderr:      54:                    size_hint_x: 1
+[WARNING] stderr: ...
+[WARNING] stderr: AttributeError: 'CustomCard' object has no attribute 'progress'
+[WARNING] stderr:   File "/data/user/0/ru.iiec.pydroid3/files/aarch64-linux-android/lib/python3.11/site-packages/kivy/lang/builder.py", line 240, in create_handler
+[WARNING] stderr:     return eval(value, idmap), bound_list
+[WARNING] stderr:            ^^^^^^^^^^^^^^^^^^
+[WARNING] stderr:   File "/storage/emulated/0/Projects/kivyapp2.0/card.kv", line 52, in <module>
+[WARNING] stderr:     value: root.progress #50
+[WARNING] stderr:     ^^^^^^^^^^^^^
+[WARNING] stderr:   File "kivy/weakproxy.pyx", line 32, in kivy.weakproxy.WeakProxy.__getattr__
+[WARNING] stderr: 
+[WARNING] stderr: 
+[WARNING] stderr: During handling of the above exception, another exception occurred:
+[WARNING] stderr: 
+[WARNING] stderr: Traceback (most recent call last):
+[WARNING] stderr:   File "/storage/emulated/0/Projects/kivyapp2.0/main.py", line 20, in <module>
+[WARNING] stderr:     MainApp().run()
+[WARNING] stderr:   File "/data/user/0/ru.iiec.pydroid3/files/aarch64-linux-android/lib/python3.11/site-packages/kivy/app.py", line 955, in run
+[WARNING] stderr:     self._run_prepare()
+[WARNING] stderr:   File "/data/user/0/ru.iiec.pydroid3/files/aarch64-linux-android/lib/python3.11/site-packages/kivy/app.py", line 925, in _run_prepare
+[WARNING] stderr:     root = self.build()
+[WARNING] stderr:            ^^^^^^^^^^^^
+[WARNING] stderr:   File "/storage/emulated/0/Projects/kivyapp2.0/main.py", line 14, in build
+[WARNING] stderr:     sm.add_widget(DashboardScreen(name="dashboard"))
+[WARNING] stderr:                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[WARNING] stderr:   File "/storage/emulated/0/Projects/kivyapp2.0/screens.py", line 34, in __init__
+[WARNING] stderr:     self.create_sensor_cards()
+[WARNING] stderr:   File "/storage/emulated/0/Projects/kivyapp2.0/screens.py", line 48, in create_sensor_cards
+[WARNING] stderr:     card = CustomCard(
+[WARNING] stderr:            ^^^^^^^^^^^
+[WARNING] stderr:   File "/storage/emulated/0/Projects/kivyapp2.0/screens.py", line 24, in __init__
+[WARNING] stderr:     super().__init__(**kwargs)
+[WARNING] stderr:   File "/data/user/0/ru.iiec.pydroid3/files/aarch64-linux-android/lib/python3.11/site-packages/kivymd/uix/card/card.py", line 824, in __init__
+[WARNING] stderr:     super().__init__(*args, **kwargs)
+[WARNING] stderr:   File "/data/user/0/ru.iiec.pydroid3/files/aarch64-linux-android/lib/python3.11/site-packages/kivymd/uix/behaviors/declarative_behavior.py", line 311, in __init__
+[WARNING] stderr:     super().__init__(**kwargs)
+[WARNING] stderr:   File "/data/user/0/ru.iiec.pydroid3/files/aarch64-linux-android/lib/python3.11/site-packages/kivymd/uix/behaviors/backgroundcolor_behavior.py", line 244, in __init__
+[WARNING] stderr:     super().__init__(**kwargs)
+[WARNING] stderr:   File "/data/user/0/ru.iiec.pydroid3/files/aarch64-linux-android/lib/python3.11/site-packages/kivymd/theming.py", line 1670, in __init__
+[WARNING] stderr:     super().__init__(**kwargs)
+[WARNING] stderr:   File "/data/user/0/ru.iiec.pydroid3/files/aarch64-linux-android/lib/python3.11/site-packages/kivymd/uix/behaviors/backgroundcolor_behavior.py", line 164, in __init__
+[WARNING] stderr:     super().__init__(**kwarg)
+[WARNING] stderr:   File "/data/user/0/ru.iiec.pydroid3/files/aarch64-linux-android/lib/python3.11/site-packages/kivymd/uix/behaviors/hover_behavior.py", line 139, in __init__
+[WARNING] stderr:     super(HoverBehavior, self).__init__(**kwargs)
+[WARNING] stderr:   File "/data/user/0/ru.iiec.pydroid3/files/aarch64-linux-android/lib/python3.11/site-packages/kivy/uix/behaviors/button.py", line 121, in __init__
+[WARNING] stderr:     super(ButtonBehavior, self).__init__(**kwargs)
+[WARNING] stderr:   File "/data/user/0/ru.iiec.pydroid3/files/aarch64-linux-android/lib/python3.11/site-packages/kivy/uix/boxlayout.py", line 145, in __init__
+[WARNING] stderr:     super(BoxLayout, self).__init__(**kwargs)
+[WARNING] stderr:   File "/data/user/0/ru.iiec.pydroid3/files/aarch64-linux-android/lib/python3.11/site-packages/kivy/uix/layout.py", line 76, in __init__
+[WARNING] stderr:     super(Layout, self).__init__(**kwargs)
+[WARNING] stderr:   File "/data/user/0/ru.iiec.pydroid3/files/aarch64-linux-android/lib/python3.11/site-packages/kivy/uix/widget.py", line 366, in __init__
+[WARNING] stderr:     self.apply_class_lang_rules(
+[WARNING] stderr:   File "/data/user/0/ru.iiec.pydroid3/files/aarch64-linux-android/lib/python3.11/site-packages/kivy/uix/widget.py", line 470, in apply_class_lang_rules
+[WARNING] stderr:     Builder.apply(
+[WARNING] stderr:   File "/data/user/0/ru.iiec.pydroid3/files/aarch64-linux-android/lib/python3.11/site-packages/kivy/lang/builder.py", line 540, in apply
+[WARNING] stderr:     self._apply_rule(
+[WARNING] stderr:   File "/data/user/0/ru.iiec.pydroid3/files/aarch64-linux-android/lib/python3.11/site-packages/kivy/lang/builder.py", line 709, in _apply_rule
+[WARNING] stderr:     raise BuilderException(rule.ctx, rule.line,
+[WARNING] stderr: kivy.lang.builder.BuilderException: Parser: File "/storage/emulated/0/Projects/kivyapp2.0/card.kv", line 52:
+[WARNING] stderr: ...
+[WARNING] stderr:      50:                padding: 0, 0, 0, dp(5)
+[WARNING] stderr:      51:                MDProgressBar:
+[WARNING] stderr: >>   52:                    value: root.progress #50
+[WARNING] stderr:      53:                    color: root.icon.text_color 
+[WARNING] stderr:      54:                    size_hint_x: 1
+[WARNING] stderr: ...
+[WARNING] stderr: BuilderException: Parser: File "/storage/emulated/0/Projects/kivyapp2.0/card.kv", line 52:
+[WARNING] stderr: ...
+[WARNING] stderr:      50:                padding: 0, 0, 0, dp(5)
+[WARNING] stderr:      51:                MDProgressBar:
+[WARNING] stderr: >>   52:                    value: root.progress #50
+[WARNING] stderr:      53:                    color: root.icon.text_color 
+[WARNING] stderr:      54:                    size_hint_x: 1
+[WARNING] stderr: ...
+[WARNING] stderr: AttributeError: 'CustomCard' object has no attribute 'progress'
+[WARNING] stderr:   File "/data/user/0/ru.iiec.pydroid3/files/aarch64-linux-android/lib/python3.11/site-packages/kivy/lang/builder.py", line 240, in create_handler
+[WARNING] stderr:     return eval(value, idmap), bound_list
+[WARNING] stderr:            ^^^^^^^^^^^^^^^^^^
+[WARNING] stderr:   File "/storage/emulated/0/Projects/kivyapp2.0/card.kv", line 52, in <module>
+[WARNING] stderr:     value: root.progress #50
+[WARNING] stderr:     ^^^^^^^^^^^^^
+[WARNING] stderr:   File "kivy/weakproxy.pyx", line 32, in kivy.weakproxy.WeakProxy.__getattr__
+[WARNING] stderr: 
+[WARNING] stderr:   File "/data/user/0/ru.iiec.pydroid3/files/aarch64-linux-android/lib/python3.11/site-packages/kivy/lang/builder.py", line 694, in _apply_rule
+[WARNING] stderr:     value, bound = create_handler(
+[WARNING] stderr:                    ^^^^^^^^^^^^^^^
+[WARNING] stderr:   File "/data/user/0/ru.iiec.pydroid3/files/aarch64-linux-android/lib/python3.11/site-packages/kivy/lang/builder.py", line 243, in create_handler
+[WARNING] stderr:     raise BuilderException(rule.ctx, rule.line,
+[WARNING] stderr: 

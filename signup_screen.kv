@@ -1,0 +1,62 @@
+<SignupScreen>:
+    name: "signup"  # Give the screen a name
+    MDBoxLayout:
+        orientation: "vertical"
+        padding: "20dp"
+        size_hint: 1, 1
+        pos_hint: {"center_y": 0.5}
+        # canvas.before:
+        #     Color:
+        #         rgba: 1, 0, 0, 1  # Red border color
+        #     Line:
+        #         width: 2
+        #         rectangle: self.x, self.y, self.width, self.height
+        MDAnchorLayout:
+            anchor_x: "center"
+            anchor_y: "center"
+            MDBoxLayout:
+                orientation: "vertical"
+                padding: "10dp"
+                size_hint_x: None
+                size_hint_y: None
+                width: "300dp"  # Set a width
+                height: self.minimum_height  # Auto-adjust height based on content
+                pos_hint: {"center_y": 0.5, "center_x": 0.5}
+                spacing: "10dp"
+                # canvas.before:
+                #     Color:
+                #         rgba: 1, 0, 0, 1  # Red border color
+                #     Line:
+                #         width: 2
+                #         rectangle: self.x, self.y, self.width, self.height
+                MDLabel:
+                    text: "Sign Up"
+                    font_style: "H3"
+                    halign: "center"    
+                    valign: "center"
+                    size_hint_y: None
+                    height: self.texture_size[1] + dp(10)  # Adjust height dynamically
+                MDTextField:
+                    mode: "fill"
+                    id: username
+                    hint_text: "Username"
+                    size_hint_y: None
+                MDTextField:
+                    padding: 0, 0
+                    id: password
+                    hint_text: "Password"
+                    password: True
+                    password_mask: "*"
+                    mode: "fill"
+                    icon_right: "eye-off"
+                    on_icon_right: self.password = not self.password
+                MDRaisedButton:
+                    text: "Sign up"
+                    theme_width: "Custom"
+                    size_hint_x: 1
+                    on_release: root.signup()
+                MDRaisedButton:
+                    text: "Login"
+                    theme_width: "Custom"
+                    size_hint_x: 1
+                    on_release: root.manager.current = 'login'   
