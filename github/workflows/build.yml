@@ -14,11 +14,6 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Debug Buildozer
-        run: |
-          which buildozer || echo "Buildozer not found!"
-          buildozer --version || echo "Buildozer version check failed!"
-
       - name: Install Dependencies
         run: |
           sudo apt update
@@ -50,4 +45,4 @@ jobs:
           prerelease: false
           files: bin/*.apk
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+          GITHUB_TOKEN: ${{ secrets.GH-PAT }}
