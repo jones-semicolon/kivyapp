@@ -41,15 +41,24 @@
                     id: username
                     hint_text: "Username"
                     size_hint_y: None
-                MDTextField:
-                    padding: 0, 0
-                    id: password
-                    hint_text: "Password"
-                    password: True
-                    password_mask: "*"
-                    mode: "fill"
-                    icon_right: "eye-off"
-                    on_icon_right: self.password = not self.password
+                MDRelativeLayout:
+                    size_hint_y: None
+                    height: password.height
+
+                    MDTextField:
+                        id: password
+                        mode: "fill"
+                        hint_text: "Password"
+                        password: True
+
+                    MDIconButton:
+                        icon: "eye-off"
+                        pos_hint: {"center_y": .5}
+                        pos: password.width - self.width , 0
+                        theme_text_color: "Hint"
+                        on_release:
+                            self.icon = "eye" if self.icon == "eye-off" else "eye-off"
+                            password.password = False if password.password is True else True
                 MDRaisedButton:
                     text: "Login"
                     theme_width: "Custom"
