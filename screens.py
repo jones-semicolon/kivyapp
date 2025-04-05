@@ -4,6 +4,7 @@ from kivymd.uix.dialog import MDDialog
 from kivymd.uix.button import MDRaisedButton
 from kivymd.uix.widget import Widget
 from kivymd.uix.card import MDCard
+from kivymd.uix.floatlayout import MDFloatLayout
 from kivy.properties import StringProperty, NumericProperty, ListProperty
 
 # Load KV files manually
@@ -12,11 +13,16 @@ Builder.load_file("signup_screen.kv")
 Builder.load_file("terms_conditions.kv")
 Builder.load_file("dashboard.kv")
 Builder.load_file("card.kv")
+Builder.load_file("floating_window.kv")
 
 USER_DATA = {"admin": "123"}
 
 
 class TermsConditionsScreen(MDScreen):
+    pass
+
+
+class FloatingWindow(MDFloatLayout):
     pass
 
 
@@ -56,6 +62,7 @@ class DashboardScreen(MDScreen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.create_sensor_cards()
+        self.floatingwindow = None
 
     sensor_data = [
         {
@@ -112,6 +119,11 @@ class DashboardScreen(MDScreen):
                 color=sensor["color"],
             )
             container.add_widget(card)
+
+    def create_window(self):
+        if not self.floatingwindow:
+            self.floatingwindow = FloatingWindow()
+            self.add_widget(self.floatingwindow, index=0)
 
 
 class LoginScreen(MDScreen):

@@ -42,7 +42,7 @@ jobs:
           name: Release ${{ github.ref_name }}
           body: "Automated release for version ${{ github.ref_name }}"
           draft: false
-          prerelease: false
+          prerelease: true
           files: bin/*.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GH-PAT }}

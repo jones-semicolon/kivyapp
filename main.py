@@ -12,7 +12,7 @@ class MainApp(MDApp):
         sm.add_widget(SignupScreen(name="signup"))
         sm.add_widget(TermsConditionsScreen(name="termsconditions"))
         sm.add_widget(DashboardScreen(name="dashboard"))
-        # sm.current = "dashboard"
+        sm.current = "dashboard"
         self.theme_cls.theme_style = "Dark"
         return sm
 
