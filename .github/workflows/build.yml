@@ -14,6 +14,11 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
+      - name: Inject Service Account Key
+        run: |
+          echo "${{ secrets.GCP_SA_KEY }}" > ./service-account.json
+          chmod 600 ./service-account.json # Secure file permissions
+
       - name: Install Dependencies
         run: |
           sudo apt update
