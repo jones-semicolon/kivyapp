@@ -2,18 +2,6 @@
     id: floating_window
     size_hint: 1, 1 
     md_bg_color: 0,0,0,0.5
-    Widget:
-        size_hint: 1, 1
-        on_touch_down: lambda *args: True
-        on_touch_up: lambda *args: True
-        on_touch_move: lambda *args: True
-        canvas.before:
-            Color:
-                rgba: 1, 0, 0, 1  # Red border color
-            Line:
-                width: 2
-                rectangle: self.x, self.y, self.width, self.height
-        index: 0
     MDAnchorLayout:
         anchor_x: "center"
         anchor_y: "center"
@@ -27,19 +15,39 @@
                 size_hint: 1, None
                 pos_hint: {'center_x': .5, 'center_y': .5}
                 orientation: 'vertical'
-                spacing: dp(20)
+                spacing: dp(10)
                 adaptive_height: True
                 MDBoxLayout:
+                    id: list
                     orientation: "horizontal"
                     size_hint: 1, None
                     pos_hint: {'center_x': .5, 'center_y': .5}
                     adaptive_height: True
-                    MDLabel:
-                        text: "Sort by"
-                        height: self.texture_size[1]
-                    MDIcon:
+                    Widget:
+                        size_hint_x: 1
+                    # MDLabel:
+                    #     text: "Sort by"
+                    #     height: self.texture_size[1]
+                    MDIconButton:
                         icon: "close"
-                        height: self.texture_size[1]
+                        size_hint: None, None
+                        # Use 'user_font_size' or 'icon_size' to define the icon size
+                        user_font_size: "32sp"
+                        # Make the button the same size as the icon
+                        width: self.user_font_size
+                        height: self.user_font_size
+                        
+                        # Remove any background color or ripple
+                        md_bg_color: (0, 0, 0, 0)
+                        theme_text_color: "Custom"
+                        text_color: (1, 1, 1, 1)
+                        on_release: root.close_window()
+                        # canvas.before:
+                        #     Color:
+                        #         rgba: 1, 0, 0, 1  # Red border color
+                        #     Line:
+                        #         width: 2
+                        #         rectangle: self.x, self.y, self.width, self.height
                 MDScrollView:
                     do_scroll_x: False
                     size_hint_x: 1
@@ -47,26 +55,9 @@
                     adaptive_height: True
                     height: root.width
                     MDGridLayout:
+                        id: grid
                         adaptive_height: True
                         cols: 2
                         spacing: dp(10)
                         size_hint_x: 1
                         size_hint_y: None
-                        MDSmartTile:
-                            source: "assets/image.jpg"
-                            size_hint: 1, None
-                            height: self.width
-                            radius: self.width *.05
-                            box_color: 0,0,0,0
-                        MDSmartTile:
-                            source: "assets/image1.jpg"
-                            size_hint: 1, None
-                            radius: self.width *.05
-                            height: self.width
-                            box_color: 0,0,0,0
-                        MDSmartTile:
-                            source: "assets/image2.jpg"
-                            size_hint: 1, None
-                            radius: self.width *.05
-                            height: self.width
-                            box_color: 0,0,0,0

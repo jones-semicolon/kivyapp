@@ -4,8 +4,14 @@ from kivymd.uix.dialog import MDDialog
 from kivymd.uix.button import MDRaisedButton
 from kivymd.uix.widget import Widget
 from kivymd.uix.card import MDCard
+from kivymd.uix.label import MDLabel
+from kivymd.uix.imagelist import MDSmartTile
 from kivymd.uix.floatlayout import MDFloatLayout
 from kivy.properties import StringProperty, NumericProperty, ListProperty
+from google_api import list_image_links
+from kivy.uix.image import AsyncImage
+from kivy.uix.modalview import ModalView
+from kivymd.uix.menu import MDDropdownMenu
 
 # Load KV files manually
 Builder.load_file("login_screen.kv")
@@ -14,16 +20,51 @@ Builder.load_file("terms_conditions.kv")
 Builder.load_file("dashboard.kv")
 Builder.load_file("card.kv")
 Builder.load_file("floating_window.kv")
+Builder.load_file("image.kv")
 
 USER_DATA = {"admin": "123"}
+folder_id = "1LQx5LpcYfqhfQHZYrcTbOPMsOzhz9q9F"
 
 
 class TermsConditionsScreen(MDScreen):
     pass
 
 
+class FullScreenImage(ModalView):
+    def __init__(self, source, **kwargs):
+        super().__init__(**kwargs)
+        self.size_hint = (1, 1)
+        self.auto_dismiss = True  # Closes on tap outside the image
+        # Use AsyncImage if you want to load remote images
+        self.add_widget(AsyncImage(source=source, allow_stretch=True, keep_ratio=True))
+
+
+class SmartTileFromURL(MDSmartTile):
+    # Ensure that you have a source property defined
+    source = StringProperty()
+
+    def on_release(self):
+        # Open the full-screen modal with the image
+        full_screen = FullScreenImage(source=self.source)
+        full_screen.open()
+
+
 class FloatingWindow(MDFloatLayout):
-    pass
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.load_images()
+
+    def load_images(self):
+        for url in list_image_links(folder_id):
+            tile = SmartTileFromURL(
+                source=url,
+            )
+            self.ids.grid.add_widget(tile)
+
+    def close_window(self):
+        if self.parent:
+            self.parent.floatingwindow = None
+            self.parent.remove_widget(self)
 
 
 class CustomCard(MDCard):
@@ -124,6 +165,29 @@ class DashboardScreen(MDScreen):
         if not self.floatingwindow:
             self.floatingwindow = FloatingWindow()
             self.add_widget(self.floatingwindow, index=0)
+
+    def open_menu(self, caller):
+        menu_items = [
+            {
+                "text": "Logout",
+                "viewclass": "OneLineListItem",
+                "on_release": self.logout,
+            }
+        ]
+        self.menu = MDDropdownMenu(
+            caller=caller,
+            items=menu_items,
+            hor_growth="left",  # This makes menu grow to the left
+            position="bottom",  # Position below the caller
+            width_mult=0,
+            width="32dp",
+        )
+        self.menu.open()
+
+    def logout(self):
+        print("Logging out...")
+        self.menu.dismiss()
+        self.manager.current = "login"
 
 
 class LoginScreen(MDScreen):
