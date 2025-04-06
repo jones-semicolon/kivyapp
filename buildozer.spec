@@ -43,7 +43,7 @@ requirements =
     kivymd==1.2.0,
     google-api-core>=2.0.0,  
     google-api-python-client,
-    google-auth>=1.6.3,<3.0.0,
+    google-auth>=1.6.3,
     google-auth-httplib2,
     google-auth-oauthlib,
     pyasn1,
