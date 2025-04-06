@@ -37,7 +37,20 @@ version = 0.1
 
 # (list) Application requirements
 # comma separated e.g. requirements = sqlite3,kivy
-requirements = python3,kivy,kivymd==1.2.0,google-api-python-client,google-auth,google-auth-httplib2,google-auth-oauthlib,pyasn1,pyasn1-modules
+requirements = 
+    python3,
+    kivy,
+    kivymd==1.2.0,
+    google-api-python-client,
+    google-auth,
+    google-auth-httplib2,
+    google-auth-oauthlib,
+    pyasn1,
+    pyasn1-modules,
+    rsa,
+    requests,          
+    cachetools,       
+    six>=1.13.0      
 
 # (str) Custom source folders for requirements
 # Sets custom source for any requirements with recipes
