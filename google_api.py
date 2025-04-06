@@ -1,16 +1,13 @@
-import os
-import json
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
 
 
 def list_image_links(folder_id):
     SCOPES = ["https://www.googleapis.com/auth/drive.readonly"]
+    SERVICE_ACCOUNT_FILE = "data\\service_account.json"
 
-    # Load service account info from environment variable
-    service_account_info = json.loads(os.environ["GCP_SA_KEY"])
-    creds = service_account.Credentials.from_service_account_info(
-        service_account_info, scopes=SCOPES
+    creds = service_account.Credentials.from_service_account_file(
+        SERVICE_ACCOUNT_FILE, scopes=SCOPES
     )
 
     service = build("drive", "v3", credentials=creds)

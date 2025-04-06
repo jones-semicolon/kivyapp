@@ -9,8 +9,6 @@ jobs:
   build-android:
     name: Build for Android
     runs-on: ubuntu-latest
-    env:
-      GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
 
     steps:
       - name: Checkout Repository
@@ -23,6 +21,10 @@ jobs:
           pip install --user --upgrade Cython virtualenv
           pip install --user --upgrade buildozer
           echo 'export PATH=$PATH:~/.local/bin/' >> ~/.bashrc
+
+      - name: Write GCP SA Key for app
+        run: |
+          echo "${{ secrets.GCP_SA_KEY }}" > ./data/service_account.json
 
       - name: Build APK
         run: |
