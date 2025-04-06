@@ -41,16 +41,18 @@ requirements =
     python3,
     kivy,
     kivymd==1.2.0,
+    google-api-core>=2.0.0,  
     google-api-python-client,
-    google-auth,
+    google-auth>=1.6.3,<3.0.0,
     google-auth-httplib2,
     google-auth-oauthlib,
     pyasn1,
-    pyasn1-modules,
-    rsa,
-    requests,          
-    cachetools,       
-    six>=1.13.0      
+    pyasn1-modules>=0.2.1,
+    rsa>=4.0,
+    requests,
+    cachetools>=5.3,        
+    protobuf>=3.19.0,       
+    grpcio>=1.50.0          
 
 # (str) Custom source folders for requirements
 # Sets custom source for any requirements with recipes
