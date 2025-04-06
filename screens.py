@@ -125,8 +125,8 @@ class DashboardScreen(MDScreen):
         {
             "icon": "ph",
             "text": "pH Level",
-            "value": 6.9,
-            "max_value": 14,
+            "value": 1.2,
+            "max_value": 7.5,
             "unit": "pH",
             "color": [0.31373, 0.78431, 0.47059, 1],
         },
@@ -141,8 +141,8 @@ class DashboardScreen(MDScreen):
         {
             "icon": "waves-arrow-up",
             "text": "Water Level",
-            "value": 69,
-            "max_value": 200,
+            "value": 89,
+            "max_value": 100,
             "unit": "L",
             "color": [0.11, 0.56, 0.8, 1],
         },
