@@ -56,7 +56,7 @@ requirements =
     idna==3.10,
     Kivy==2.3.1,
     Kivy-Garden==0.1.5,
-    kivymd==1.0.2,
+    kivymd==1.2.0,
     oauthlib==3.2.2,
     pexpect==4.9.0,
     pillow==11.1.0,
