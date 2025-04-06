@@ -1,0 +1,65 @@
+<TermsConditionsScreen>:
+    name: "termsconditions"
+    MDBoxLayout:
+        orientation: "vertical"
+        padding: "20dp"
+        spacing: "10dp"
+        size_hint: 1, 1
+        pos_hint: {"center_y": 0.5}
+        # canvas.before:
+        #     Color:
+        #         rgba: 1, 0, 0, 1  # Red border color
+        #     Line:
+        #         width: 2
+        #         rectangle: self.x, self.y, self.width, self.height
+        
+        MDLabel:
+            text: "User Agreement"
+            font_style: "H3"
+            halign: "center"
+            size_hint_y: None
+            height: self.texture_size[1] + dp(10)
+
+        MDScrollView:
+            size_hint: 1, 1
+            do_scroll_x: False
+
+            MDBoxLayout:
+                orientation: "vertical"
+                adaptive_height: True  # Ensure this container adapts to text height
+                padding: "10dp"
+                
+                MDLabel: 
+                    text: "Lorem ipsum dolor sit amet consectetur adipiscing elit vivamus quis scelerisque, auctor pellentesque tincidunt cursus diam bibendum nisi montes facilisis iaculis feugiat, sem nam netus vel posuere massa erat imperdiet elementum. Convallis augue rhoncus maecenas mi nisl etiam nisi litora, suscipit nascetur iaculis vulputate turpis porta lacinia lectus habitant, suspendisse eleifend pharetra scelerisque montes ridiculus netus. Vitae justo accumsan cum risus varius hendrerit cras fusce per vel magnis, venenatis congue maecenas litora fames nullam feugiat mollis ultrices. Dapibus mattis in leo tellus hendrerit dictum litora parturient condimentum integer, aliquet facilisi dignissim lobortis tempus velit orci auctor torquent, faucibus consequat bibendum maecenas egestas non ac dis at. Facilisis porttitor ac in ultrices eu est ornare, litora luctus convallis fringilla cum ridiculus at, mi dictumst tempor neque senectus nisl. Ridiculus felis sed odio orci fusce turpis netus auctor non, convallis nunc dignissim quisque diam dictum vitae elementum, nibh urna scelerisque mi sociis nec luctus tempor. Etiam orci sagittis magna consequat praesent porttitor dictum, cum iaculis felis laoreet euismod ullamcorper proin, vitae mattis facilisi pharetra neque ornare. Vivamus urna sociis platea hac habitant suscipit est non accumsan luctus id at, senectus ligula ac mattis nascetur orci morbi vulputate ornare ante mauris, egestas condimentum mollis aliquet risus arcu porta convallis penatibus netus leo. Habitasse elementum mi etiam penatibus varius curae metus, magnis placerat himenaeos consequat leo conubia, potenti suspendisse enim turpis ridiculus faucibus. Molestie sodales gravida feugiat sollicitudin magna eleifend id, volutpat non pulvinar posuere dis cubilia, malesuada porttitor urna leo bibendum tempor. Suspendisse lobortis himenaeos sagittis nunc netus mi sollicitudin semper inceptos, ullamcorper mus nibh neque nascetur nullam aliquam cubilia, laoreet imperdiet cras porttitor accumsan venenatis habitant vestibulum. Nibh nulla sollicitudin dui auctor felis nam non, mattis volutpat odio ligula euismod tellus morbi consequat, nisl praesent imperdiet eu at venenatis. Ridiculus facilisis erat curae aliquet enim sed scelerisque turpis metus platea semper, fringilla mi id sociosqu nisi sapien mattis ac eros euismod, tellus nullam dictum suscipit suspendisse eu imperdiet aliquam montes quisque. Tempor turpis nisi odio tristique dapibus convallis viverra per est, augue eget fusce montes nibh sed euismod proin neque fermentum, et accumsan curae iaculis feugiat parturient libero porta. Consequat felis pretium congue accumsan a pellentesque augue etiam fermentum, cum nascetur convallis fames morbi vitae habitant dui nam, velit conubia tellus lobortis enim imperdiet semper taciti. Bibendum aenean penatibus per luctus viverra gravida et justo, elementum suspendisse commodo hac rutrum sed suscipit, aliquam euismod porta sem vitae natoque pretium."
+                    size_hint_y: None
+                    font_style: "Body1"
+                    height: self.texture_size[1]  # Ensure the label expands to fit text
+                    text_size: self.width, None  # Prevent text cutoff
+                    halign: "left"
+                    valign: "top"
+        MDBoxLayout:
+            orientation: "horizontal"
+            size_hint_y: None
+            height: dp(48)  # Adjust height for better alignment
+            spacing: "10dp"
+            padding: "10dp"
+
+            MDCheckbox:
+                id: terms_checkbox
+                size_hint: None, None
+                size: dp(24), dp(24)  # Properly size the checkbox
+                active: False
+
+            MDLabel:
+                text: "By continuing, you agree to the terms and conditions of this app. Please read them carefully."
+                theme_text_color: "Secondary"
+                halign: "left"
+                font_size: dp(12)
+                size_hint_x: 1
+
+        MDRaisedButton:
+            text: "I Agree"
+            theme_width: "Custom"
+            size_hint_x: 1
+            disabled: not terms_checkbox.active
+            on_release: root.manager.current = "dashboard"

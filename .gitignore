@@ -1,0 +1,6 @@
+.git/**
+.git/
+.kivy/**
+.kivy/
+__pycache__/
+service-account.json

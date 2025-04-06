@@ -1,0 +1,76 @@
+<CustomCard@MDCard+MDButtonBehavior>
+    orientation: "horizontal"
+    padding: dp(10)
+    size_hint_x: 1
+    size_hint_y: None
+    # adaptive_height: True
+    height: dp(75)
+    pos_hint: {"center_y": 0.5}
+    radius: [dp(10)]
+    md_bg_color: 1, 1, 1, 1
+    on_release: None
+    canvas.before:
+        Color:
+            rgba: 0, 0, 0, 0.2  # Border color (Black with 20% opacity)
+        Line:
+            width: dp(1)  # Border thickness
+            rounded_rectangle: (self.x, self.y, self.width, self.height, dp(10))  # Rounded borders
+    MDBoxLayout:
+        orientation: "horizontal"
+        spacing: dp(10)
+        size_hint: 1, 1
+        MDIcon:
+            id: icon
+            icon: root.icon #"landslide"
+            pos_hint: {"center_x": .5, "center_y": .5}
+            font_size: dp(75) - dp(30)
+            theme_text_color: "Custom"
+            text_color: root.color # 210, 180, 140, 1
+        MDBoxLayout:
+            orientation: "vertical"
+            spacing: dp(5)
+            size_hint: 1, 1
+            MDBoxLayout:
+                orientation: "horizontal"
+                size_hint_y: None
+                size_hint_x: 1
+                adaptive_height: True
+                MDLabel:
+                    text: root.text #"Soil Moisture"
+                    theme_text_color: "Secondary"
+                    size_hint_x: 1
+                    valign: "bottom"
+                    bold: True
+                MDBoxLayout:
+                    orientation: "horizontal"
+                    adaptive_height: True
+                    adaptive_width: True
+                    size_hint: None, None 
+                    MDLabel:
+                        text: str(root.value) #"1040 PPM"
+                        theme_text_color: "Hint"
+                        size_hint_x: None
+                        adaptive_width: True
+                        valign: "bottom"
+                        font_size: "12sp"
+                    MDLabel:
+                        text: root.unit #"PPM"
+                        theme_text_color: "Hint"
+                        size_hint_x: None
+                        adaptive_width: True
+                        valign: "bottom"
+                        font_size: "12sp"
+            MDBoxLayout:
+                size_hint_x: 1
+                size_hint_y: None
+                orientation: "vertical"
+                adaptive_height: True
+                padding: 0, 0, 0, dp(5)
+                MDProgressBar:
+                    color: root.color
+                    value: ((root.value / root.max_value) * 100)
+                    size_hint_x: 1
+                    size_hint_y: None
+                    height: dp(15)
+                    radius: [dp(7.5)]
+                    back_color: root.light_color
