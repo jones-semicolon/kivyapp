@@ -69,14 +69,12 @@ requirements =
     Pygments==2.19.1,
     pyparsing==3.2.3,
     pypiwin32==223,
-    pywin32==310,
     requests==2.32.3,
     requests-oauthlib==2.0.0,
     rsa==4.9,
     sh==2.2.2,
     uritemplate==4.1.1,
     urllib3==2.3.0,
-    virtualenv==20.30.0,
 
 # (str) Custom source folders for requirements
 # Sets custom source for any requirements with recipes
