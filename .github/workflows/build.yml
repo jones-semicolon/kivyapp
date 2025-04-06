@@ -9,15 +9,12 @@ jobs:
   build-android:
     name: Build for Android
     runs-on: ubuntu-latest
+    env:
+      GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
-
-      - name: Inject Service Account Key
-        run: |
-          echo "${{ secrets.GCP_SA_KEY }}" > ./service-account.json
-          chmod 600 ./service-account.json # Secure file permissions
 
       - name: Install Dependencies
         run: |
