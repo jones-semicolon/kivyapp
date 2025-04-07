@@ -12,7 +12,7 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v2
 
       - name: Install Dependencies
         run: |
@@ -21,9 +21,13 @@ jobs:
           pip install --user --upgrade Cython virtualenv
           pip install --user --upgrade buildozer
           echo 'export PATH=$PATH:~/.local/bin/' >> ~/.bashrc
+          source ~/.bashrc
 
-      - name: Write GCP SA Key for app
+      - name: Write GCP SA Key for App
+        env:
+          GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
         run: |
+          mkdir -p ./assets
           echo "${{ secrets.GCP_SA_KEY }}" > ./assets/service_account.json
 
       - name: Build APK
@@ -34,13 +38,13 @@ jobs:
           yes | buildozer -v android debug
 
       - name: Upload APK as Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v3
         with:
           name: myapp-apk
           path: bin/*.apk
 
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v1
         with:
           tag_name: ${{ github.ref_name }}
           name: Release ${{ github.ref_name }}
@@ -49,4 +53,4 @@ jobs:
           prerelease: true
           files: bin/*.apk
         env:
-          GITHUB_TOKEN: ${{ secrets.GH-PAT }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
