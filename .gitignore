@@ -3,4 +3,4 @@
 .kivy/**
 .kivy/
 __pycache__/
-data/service_account.json
+assets/service_account.json
