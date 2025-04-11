@@ -12,23 +12,22 @@ app.use(bodyParser.json());
 
 // Load and parse the service account credentials
 let serviceAccount;
-// try {
-//   const serviceAccount = JSON.parse(
-//     Buffer.from(process.env.GOOGLE_SERVICE_ACCOUNT, "base64").toString("utf8"),
-//   );
-// } catch (err) {
-//   console.error("❌ Failed to load service account JSON:", err.message);
-//   process.exit(1);
-// }
-
 try {
-  serviceAccount = JSON.parse(
-    fs.readFileSync("./service_account.json", "utf8"),
-  );
+  serviceAccount = JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT);
 } catch (err) {
   console.error("❌ Failed to load service account JSON:", err.message);
   process.exit(1);
 }
+
+// try {
+//   serviceAccount = JSON.parse(
+//     fs.readFileSync("./service_account.json", "utf8"),
+//   );
+//   console.log(serviceAccount);
+// } catch (err) {
+//   console.error("❌ Failed to load service account JSON:", err.message);
+//   process.exit(1);
+// }
 
 // Set up Google Drive authentication
 const auth = new google.auth.GoogleAuth({
