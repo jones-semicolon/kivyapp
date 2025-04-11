@@ -11,6 +11,8 @@ from google_api import list_image_links
 from kivy.uix.image import AsyncImage
 from kivy.uix.modalview import ModalView
 from kivymd.uix.menu import MDDropdownMenu
+from kivy.network.urlrequest import UrlRequest
+from kivy.clock import mainthread
 
 # Load KV files manually
 Builder.load_file("login_screen.kv")
@@ -22,6 +24,7 @@ Builder.load_file("floating_window.kv")
 Builder.load_file("image.kv")
 
 USER_DATA = {"admin": "123"}
+API_BASE_URL = "https://kivyapp-production.up.railway.app"
 folder_id = "1LQx5LpcYfqhfQHZYrcTbOPMsOzhz9q9F"
 
 
@@ -54,11 +57,31 @@ class FloatingWindow(MDFloatLayout):
         self.load_images()
 
     def load_images(self):
-        for url in list_image_links(folder_id):
-            tile = SmartTileFromURL(
-                source=url,
-            )
+        url = f"{API_BASE_URL}/images/{folder_id}"
+        # Kick off the GET request; when it succeeds, `got_images` is called
+        UrlRequest(
+            url,
+            on_success=self.got_images,
+            on_error=self.on_error,
+            on_failure=self.on_error,
+            timeout=10,
+            decode=True,
+        )
+
+    @mainthread
+    def got_images(self, request, result):
+        """
+        result will be the parsed JSON:
+          { "images": [ { "id": "...", "name": "...", "downloadUrl": "..." }, … ] }
+        """
+        for file in result.get("images", []):
+            tile = SmartTileFromURL(source=file["downloadUrl"])
             self.ids.grid.add_widget(tile)
+
+    @mainthread
+    def on_error(self, request, error):
+        # handle network or parsing errors
+        print("Failed to fetch images:", error)
 
     def close_window(self):
         if self.parent:
