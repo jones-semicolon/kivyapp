@@ -37,9 +37,126 @@ const auth = new google.auth.GoogleAuth({
 
 const drive = google.drive({ version: "v3", auth });
 
+const sheets = google.sheets({ version: "v4", auth });
+
+const SPREADSHEET_ID = process.env.SPREADSHEET_ID;
+
 // Test endpoint
 app.get("/test", async (req, res) => {
   res.status(200).json({ response: "Hello world" });
+});
+
+async function ensureSheetHeader(sheet, SPREADSHEET_ID) {
+  const header = ["Timestamp", "Value", "Min", "Max", "Unit"];
+
+  // Check if the sheet has data
+  const existing = await sheets.spreadsheets.values.get({
+    spreadsheetId: SPREADSHEET_ID,
+    range: `${sheet}!A1:E1`,
+  });
+
+  if (!existing.data.values || existing.data.values.length === 0) {
+    await sheets.spreadsheets.values.update({
+      spreadsheetId: SPREADSHEET_ID,
+      range: `${sheet}!A1:E1`,
+      valueInputOption: "USER_ENTERED",
+      resource: { values: [header] },
+    });
+  }
+}
+
+async function ensureSheetExists(sheetName) {
+  const spreadsheet = await sheets.spreadsheets.get({
+    spreadsheetId: SPREADSHEET_ID,
+  });
+
+  const sheetExists = spreadsheet.data.sheets.some(
+    (s) => s.properties.title === sheetName,
+  );
+
+  if (!sheetExists) {
+    await sheets.spreadsheets.batchUpdate({
+      spreadsheetId: SPREADSHEET_ID,
+      resource: {
+        requests: [
+          {
+            addSheet: {
+              properties: {
+                title: sheetName,
+              },
+            },
+          },
+        ],
+      },
+    });
+  }
+}
+
+app.post("/data", async (req, res) => {
+  const { readTimestamp, minValue, maxValue, sensor, unit, value } = req.body;
+  // const SPREADSHEET_ID = "17Q0-wDURshAZycye4zLDHclQ0VFzQwl-SDlCMeGaIdk";
+  const sheet = sensor;
+  const values = [
+    [
+      new Date(readTimestamp).toLocaleString(),
+      value,
+      minValue || "",
+      maxValue || "",
+      unit || "",
+    ],
+  ];
+
+  if (!readTimestamp || !value || !sensor) {
+    return res.status(400).json({ error: "Important data not provided" });
+  }
+
+  try {
+    await ensureSheetExists(sheet);
+    await ensureSheetHeader(sheet, SPREADSHEET_ID);
+
+    await sheets.spreadsheets.values.append({
+      spreadsheetId: SPREADSHEET_ID,
+      range: `${sheet}!A:E`,
+      valueInputOption: "USER_ENTERED",
+      resource: { values },
+    });
+
+    // await formatSheet(sheet, values); // Optional
+    res.status(200).json({ message: "Data saved" });
+  } catch (err) {
+    console.error("❌ Error saving data:", err);
+    res.status(500).json({ error: "Failed to save data." });
+  }
+});
+
+app.get("/data/:sheet", async (req, res) => {
+  const sheet = req.params.sheet;
+
+  try {
+    const result = await sheets.spreadsheets.values.get({
+      spreadsheetId: SPREADSHEET_ID,
+      range: `${sheet}!A:E`, // Adjust columns as needed
+    });
+
+    const rows = result.data.values;
+    if (!rows || rows.length === 0) {
+      return res.status(404).json({ message: "No data found." });
+    }
+
+    // Optionally return the data as an array of objects with headers
+    const [headers, ...data] = rows;
+    const formattedData = data.map((row) =>
+      headers.reduce((obj, header, i) => {
+        obj[header] = row[i] || "";
+        return obj;
+      }, {}),
+    );
+
+    res.status(200).json(formattedData);
+  } catch (err) {
+    console.error("❌ Error reading data:", err);
+    res.status(500).json({ error: "Failed to read data." });
+  }
 });
 
 // POST endpoint to upload an image to Google Drive
