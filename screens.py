@@ -121,6 +121,7 @@ class CustomCard(MDCard):
     text = StringProperty()
     icon = StringProperty()
     value = BooleanProperty()
+    description = StringProperty()
     color = ListProperty([1, 1, 1])
 
     def __init__(
@@ -128,6 +129,7 @@ class CustomCard(MDCard):
         text="",
         value=False,
         icon="",
+        description="",
         color=[],
         **kwargs,
     ):
@@ -136,6 +138,7 @@ class CustomCard(MDCard):
         self.icon = icon
         self.value = value
         self.color = color
+        self.description = description
 
 
 class DashboardScreen(MDScreen):
@@ -153,14 +156,6 @@ class DashboardScreen(MDScreen):
             "unit": "PPM",
             "color": [0.8, 0.7, 0.5],
         },
-        # {
-        #     "icon": "lightbulb-on-outline",
-        #     "text": "Grow Light",
-        #     "value": 520,
-        #     "max_value": 1040,
-        #     "unit": "PPM",
-        #     "color": [1, 0.64, 0],
-        # },
         {
             "icon": "ph",
             "text": "pH Level",
@@ -186,25 +181,54 @@ class DashboardScreen(MDScreen):
             "color": [0.11, 0.56, 0.8],
         },
     ]
+    pumps = [
+        {
+            "icon": "pump",
+            "text": "Left Pump",
+            "value": False,
+            "color": [1, 0.64, 0],
+        },
+        {
+            "icon": "pump",
+            "text": "Right Pump",
+            "value": True,
+            "color": [1, 0.64, 0],
+        },
+    ]
+    light = {
+        "icon": "lightbulb-on-outline",
+        "text": "Grow Light",
+        "description": "6AM-8PM",
+        "value": False,
+        "color": [1, 0.64, 0],
+    }
 
     def create_sensor_cards(self):
         container = self.ids.container
         full_container = self.ids.full_container
         full_card = CustomCard(
-            icon="lightbulb-on-outline",
-            text="Grow Light",
-            value=False,
-            color=[1, 0.64, 0],
+            icon=self.light["icon"] if self.light["value"] else "lightbulb-off-outline",
+            text=self.light["text"],
+            description=self.light["description"],
+            value=self.light["value"],
+            color=self.light["color"],
         )
         full_container.add_widget(full_card)
         for sensor in self.sensor_data:
             card = CustomCircularCard(
                 text=sensor["text"],
-                # icon=sensor["icon"],
                 value=sensor["value"],
                 max_value=sensor["max_value"],
                 unit=sensor["unit"],
                 color=sensor["color"],
+            )
+            container.add_widget(card)
+        for pumps in self.pumps:
+            card = CustomCard(
+                icon=pumps["icon"] if pumps["value"] else "pump-off",
+                text=pumps["text"],
+                value=pumps["value"],
+                color=pumps["color"],
             )
             container.add_widget(card)
         # circularCard = CustomCircularCard(
