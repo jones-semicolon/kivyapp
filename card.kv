@@ -1,11 +1,46 @@
 <CustomCard@MDCard+MDButtonBehavior>
-    orientation: "horizontal"
-    padding: dp(10)
+    adaptive_height: True
+    # adaptive_width: True
     size_hint_x: 1
-    size_hint_y: None
-    # adaptive_height: True
-    height: dp(75)
-    pos_hint: {"center_y": 0.5}
+    pos_hint: {"center_y": 0.5, "center_x": 0.5}
+    radius: [dp(10)]
+    md_bg_color: 1, 1, 1, 1
+    padding: dp(20), dp(20), dp(20), dp(20)
+    on_release: None
+    canvas.before:
+        Color:
+            rgba: 0, 0, 0, 0.2 # Border color (Black with 20% opacity)
+        Line:
+            width: dp(1)  # Border thickness
+            rounded_rectangle: (self.x, self.y, self.width, self.height, dp(10))  # Rounded borders
+    MDBoxLayout:
+        orientation: "vertical"
+        spacing: dp(10)
+        size_hint: 1, None
+        adaptive_height: True
+        # adaptive_width: True
+        MDIcon:
+            id: icon
+            icon: root.icon #"landslide"
+            pos_hint: {"center_x": .5, "center_y": .5}
+            font_size: dp(75) 
+            theme_text_color: "Custom"
+            text_color: root.color # 210, 180, 140, 1
+        MDLabel:
+            text: root.text #"Soil Moisture"
+            theme_text_color: "Secondary"
+            size_hint_x: 1
+            height: self.texture_size[1]
+            size_hint_y: None
+            halign: "center"
+            valign: "center"
+            bold: True
+
+
+<CustomCircularCard@MDCard+MDButtonBehavior>
+    adaptive_height: True
+    adaptive_width: True
+    pos_hint: {"center_y": 0.5, "center_x": 0.5}
     radius: [dp(10)]
     md_bg_color: 1, 1, 1, 1
     on_release: None
@@ -16,61 +51,72 @@
             width: dp(1)  # Border thickness
             rounded_rectangle: (self.x, self.y, self.width, self.height, dp(10))  # Rounded borders
     MDBoxLayout:
-        orientation: "horizontal"
+        adaptive_height: True
+        adaptive_width: True
+        orientation: "vertical"
+        size_hint: None, None
+        padding: dp(30), dp(20)
         spacing: dp(10)
-        size_hint: 1, 1
-        MDIcon:
-            id: icon
-            icon: root.icon #"landslide"
-            pos_hint: {"center_x": .5, "center_y": .5}
-            font_size: dp(75) - dp(30)
-            theme_text_color: "Custom"
-            text_color: root.color # 210, 180, 140, 1
-        MDBoxLayout:
-            orientation: "vertical"
-            spacing: dp(5)
-            size_hint: 1, 1
+        AnchorLayout:
+            size_hint: None, None
+            size: dp(100) - dp(5), dp(100) - dp(5)
+            canvas.before:
+                Color:
+                    rgba: root.color + [0.3]#root.bar_color + [0.3]
+                Line:
+                    width: dp(5)#root.bar_width
+                    ellipse: (self.x, self.y, self.width, self.height, 180, 360 + 90)
+            canvas.after:
+                Color:
+                    rgb: root.color #root.bar_color + [0.3]
+                Line:
+                    width: dp(5)#root.bar_width
+                    ellipse: (self.x, self.y, self.width, self.height, 180, ((root.value / root.max_value)  * 270) + 180)
             MDBoxLayout:
                 orientation: "horizontal"
-                size_hint_y: None
-                size_hint_x: 1
                 adaptive_height: True
+                adaptive_width: True
+                size_hint: None, None 
+                spacing: dp(2)
                 MDLabel:
-                    text: root.text #"Soil Moisture"
-                    theme_text_color: "Secondary"
-                    size_hint_x: 1
-                    valign: "bottom"
-                    bold: True
-                MDBoxLayout:
-                    orientation: "horizontal"
-                    adaptive_height: True
+                    text: str(root.value) #"1040 PPM"
+                    theme_text_color: "Hint"
+                    size_hint_x: None
                     adaptive_width: True
-                    size_hint: None, None 
-                    MDLabel:
-                        text: str(root.value) #"1040 PPM"
-                        theme_text_color: "Hint"
-                        size_hint_x: None
-                        adaptive_width: True
-                        valign: "bottom"
-                        font_size: "12sp"
-                    MDLabel:
-                        text: root.unit #"PPM"
-                        theme_text_color: "Hint"
-                        size_hint_x: None
-                        adaptive_width: True
-                        valign: "bottom"
-                        font_size: "12sp"
-            MDBoxLayout:
-                size_hint_x: 1
-                size_hint_y: None
-                orientation: "vertical"
-                adaptive_height: True
-                padding: 0, 0, 0, dp(5)
-                MDProgressBar:
-                    color: root.color
-                    value: ((root.value / root.max_value) * 100)
-                    size_hint_x: 1
-                    size_hint_y: None
-                    height: dp(15)
-                    radius: [dp(7.5)]
-                    back_color: root.light_color
+                    valign: "center"
+                    font_size: "18sp"
+                MDLabel:
+                    text: root.unit #"PPM"
+                    theme_text_color: "Hint"
+                    size_hint_x: None
+                    adaptive_width: True
+                    valign: "top"
+                    font_size: "8sp"
+        MDLabel:
+            text: root.text
+            halign: "center"    
+            size_hint_y: None
+            height: self.texture_size[1] # Adjust height dynamically
+            font_size: dp(12)
+
+
+<CustomBooleanCircularCard@MDCard+MDButtonBehavior>
+    adaptive_height: True
+    adaptive_width: True
+    pos_hint: {"center_y": 0.5, "center_x": 0.5}
+    radius: [dp(10)]
+    md_bg_color: 1, 1, 1, 1
+    on_release: None
+    canvas.before:
+        Color:
+            rgba: 0, 0, 0, 0.2  # Border color (Black with 20% opacity)
+        Line:
+            width: dp(1)  # Border thickness
+            rounded_rectangle: (self.x, self.y, self.width, self.height, dp(10))  # Rounded borders
+    MDBoxLayout:
+        adaptive_height: True
+        adaptive_width: True
+        orientation: "vertical"
+        size_hint: None, None
+        padding: dp(30), dp(20)
+        spacing: dp(10)

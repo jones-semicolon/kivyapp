@@ -6,8 +6,12 @@ from kivymd.uix.card import MDCard
 from kivymd.uix.label import MDLabel
 from kivymd.uix.imagelist import MDSmartTile
 from kivymd.uix.floatlayout import MDFloatLayout
-from kivy.properties import StringProperty, NumericProperty, ListProperty
-from google_api import list_image_links
+from kivy.properties import (
+    StringProperty,
+    NumericProperty,
+    ListProperty,
+    BooleanProperty,
+)
 from kivy.uix.image import AsyncImage
 from kivy.uix.modalview import ModalView
 from kivymd.uix.menu import MDDropdownMenu
@@ -89,36 +93,49 @@ class FloatingWindow(MDFloatLayout):
             self.parent.remove_widget(self)
 
 
-class CustomCard(MDCard):
+class CustomCircularCard(MDCard):
     text = StringProperty()
-    icon = StringProperty()
     unit = StringProperty()
     value = NumericProperty()
     max_value = NumericProperty(1)
-    color = ListProperty([1, 1, 1, 1])
-    light_color = ListProperty([1, 1, 1, 1])
+    color = ListProperty([1, 1, 1])
 
     def __init__(
         self,
         text="",
-        icon="",
         value=0,
         unit="PPM",
         max_value=1,
         color=[],
-        light_color=[],
+        **kwargs,
+    ):
+        super().__init__(**kwargs)
+        self.text = text
+        self.unit = unit
+        self.value = value
+        self.max_value = float(max_value)
+        self.color = color
+
+
+class CustomCard(MDCard):
+    text = StringProperty()
+    icon = StringProperty()
+    value = BooleanProperty()
+    color = ListProperty([1, 1, 1])
+
+    def __init__(
+        self,
+        text="",
+        value=False,
+        icon="",
+        color=[],
         **kwargs,
     ):
         super().__init__(**kwargs)
         self.text = text
         self.icon = icon
-        self.unit = unit
         self.value = value
-        self.max_value = float(max_value)
         self.color = color
-        self.light_color = [min(1, c + 0.4) for c in color[:3]] + [
-            0.3
-        ]  # Make it lighter
 
 
 class DashboardScreen(MDScreen):
@@ -134,7 +151,7 @@ class DashboardScreen(MDScreen):
             "value": 720,
             "max_value": 1040,
             "unit": "PPM",
-            "color": [0.8, 0.7, 0.5, 1],
+            "color": [0.8, 0.7, 0.5],
         },
         # {
         #     "icon": "lightbulb-on-outline",
@@ -142,7 +159,7 @@ class DashboardScreen(MDScreen):
         #     "value": 520,
         #     "max_value": 1040,
         #     "unit": "PPM",
-        #     "color": [1, 0.64, 0, 1],
+        #     "color": [1, 0.64, 0],
         # },
         {
             "icon": "ph",
@@ -150,7 +167,7 @@ class DashboardScreen(MDScreen):
             "value": 1.2,
             "max_value": 7.5,
             "unit": "pH",
-            "color": [0.31373, 0.78431, 0.47059, 1],
+            "color": [0.31373, 0.78431, 0.47059],
         },
         {
             "icon": "weather-windy",
@@ -158,7 +175,7 @@ class DashboardScreen(MDScreen):
             "value": 69,
             "max_value": 100,
             "unit": "%",
-            "color": [0, 0.74, 1, 1],
+            "color": [0, 0.74, 1],
         },
         {
             "icon": "waves-arrow-up",
@@ -166,22 +183,38 @@ class DashboardScreen(MDScreen):
             "value": 89,
             "max_value": 100,
             "unit": "L",
-            "color": [0.11, 0.56, 0.8, 1],
+            "color": [0.11, 0.56, 0.8],
         },
     ]
 
     def create_sensor_cards(self):
         container = self.ids.container
+        full_container = self.ids.full_container
+        full_card = CustomCard(
+            icon="lightbulb-on-outline",
+            text="Grow Light",
+            value=False,
+            color=[1, 0.64, 0],
+        )
+        full_container.add_widget(full_card)
         for sensor in self.sensor_data:
-            card = CustomCard(
+            card = CustomCircularCard(
                 text=sensor["text"],
-                icon=sensor["icon"],
+                # icon=sensor["icon"],
                 value=sensor["value"],
                 max_value=sensor["max_value"],
                 unit=sensor["unit"],
                 color=sensor["color"],
             )
             container.add_widget(card)
+        # circularCard = CustomCircularCard(
+        #     text=self.sensor_data["text"],
+        #     value=self.sensor_data["value"],
+        #     max_value=self.sensor_data["max_value"],
+        #     unit=self.sensor_data["unit"],
+        #     color=self.sensor_data["color"],
+        # )
+        # container.add_widget(circularCard)
 
     def create_window(self):
         if not self.floatingwindow:
