@@ -198,7 +198,7 @@ class DashboardScreen(MDScreen):
     light = {
         "icon": "lightbulb-on-outline",
         "text": "Grow Light",
-        "description": "6AM-8PM",
+        "description": "6:00 AM - 6:00 PM",
         "value": False,
         "color": [1, 0.64, 0],
     }
