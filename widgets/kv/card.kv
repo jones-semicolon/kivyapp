@@ -1,4 +1,4 @@
-<CustomCard@MDCard+MDButtonBehavior>
+<CustomCard>
     adaptive_height: True
     # adaptive_width: True
     size_hint_x: 1
@@ -20,7 +20,7 @@
         adaptive_height: True
         # adaptive_width: True
         MDIcon:
-            id: icon
+            id: icon_widget
             icon: root.icon #"landslide"
             pos_hint: {"center_x": .5, "center_y": .5}
             font_size: dp(75) 
@@ -45,7 +45,7 @@
                 disabled: True
 
 
-<CustomCircularCard@MDCard>
+<CustomCircularCard>
     ripple_behavior: True
     adaptive_height: True
     size_hint: 1, None

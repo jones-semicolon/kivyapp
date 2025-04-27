@@ -148,6 +148,12 @@ class CustomCard(MDCard):
         self.color = color
         self.description = description
 
+    def update_icon(self, new_icon):
+        self.ids.icon_widget.icon = new_icon  # or whatever your icon id is
+
+    def update_value(self, new_value):
+        self.value = new_value
+
 
 class DashboardScreen(MDScreen):
     def __init__(self, **kwargs):
@@ -157,6 +163,12 @@ class DashboardScreen(MDScreen):
         self.sensor_data = []
         self.pumps = []
         self.light = []
+        self.formatted_time = None
+
+    def create_window(self):
+        if not self.floatingwindow:
+            self.floatingwindow = FloatingWindow()
+            self.add_widget(self.floatingwindow, index=0)
 
     def on_enter(self, *args):
         self.load_data()
@@ -214,65 +226,35 @@ class DashboardScreen(MDScreen):
         else:
             self.update_sensor_cards()  # afterwards just update
 
-    def generate_sensor_data(self):
-        """Generate sensor data after self.data is available."""
-        self.sensor_data = [
-            {
-                "icon": "landslide",
-                "text": "TDS",
-                "value": 720,  # hardcoded or load from data
-                "max_value": 1040,
-                "unit": "PPM",
-                "color": [0.8, 0.7, 0.5],
-            },
-            {
-                "icon": "ph",
-                "text": "pH Level",
-                # "value": float(self.data.get("pH Level", 0)),
-                "value": 2.4,
-                "max_value": 7.5,
-                "unit": "pH",
-                "color": [0.31373, 0.78431, 0.47059],
-            },
-            {
-                "icon": "weather-windy",
-                "text": "Humidity",
-                "value": float(self.data.get("Humidity", 0)),
-                "max_value": 100,
-                "unit": "%",
-                "color": [0, 0.74, 1],
-            },
-            {
-                "icon": "waves-arrow-up",
-                "text": "Water Level",
-                "value": float(self.data.get("Water Level", 0)),
-                "max_value": 100,
-                "unit": "L",
-                "color": [0.11, 0.56, 0.8],
-            },
-        ]
+    def create_sensor_cards(self):
+        container = self.ids.container
+        container.clear_widgets()
 
-        self.pumps = [
-            {
-                "icon": "pump",
-                "text": "Left Pump",
-                "value": False,  # maybe from data
-                "color": [0.3020, 0.3059, 0.3098],
-            },
-            {
-                "icon": "pump",
-                "text": "Right Pump",
-                "value": True,
-                "color": [0.3020, 0.3059, 0.3098],
-            },
-        ]
+        # Initialize empty dicts to store cards
+        self.sensor_cards = {}
+        self.light_cards = {}
 
-        self.light = [
+        # Extract and format the time
+        time_str = self.data.get("Time", "-")
+        if time_str and time_str != "-":
+            try:
+                dt = datetime.strptime(time_str, "%m/%d/%Y, %I:%M:%S %p")
+                self.formatted_time = dt.strftime(
+                    "%I:%M %p"
+                )  # Only the hour:minute AM/PM
+            except Exception:
+                self.formatted_time = "-"
+        else:
+            self.formatted_time = "-"
+
+        # Light cards
+        light_data = [
             {
                 "icon": "sprout",
                 "text": "Status",
+                "key": "Status",
                 "value": True,
-                "description": "Updated as of -",  # can use Time from self.data
+                "description": f"Updated as of {self.formatted_time}",
                 "status-icon": {
                     "on": "sprout",
                     "off": "lightbulb-off-outline",
@@ -282,8 +264,10 @@ class DashboardScreen(MDScreen):
             {
                 "icon": "lightbulb-on-outline",
                 "text": "Grow Light",
+                "key": "Grow Light Status",
+                "value": str(self.data.get("Grow Light Status", "false")).lower()
+                == "true",
                 "description": "6:00 AM - 6:00 PM",
-                "value": self.data.get("Grow Light Status", "Off") == "On",
                 "status-icon": {
                     "on": "lightbulb-on-outline",
                     "off": "lightbulb-off-outline",
@@ -292,13 +276,16 @@ class DashboardScreen(MDScreen):
             },
         ]
 
-    def create_sensor_cards(self):
-        container = self.ids.container
-        container.clear_widgets()
-
-        # Initialize empty dicts to store cards
-        self.sensor_cards = {}
-        self.light_cards = {}
+        for light in light_data:
+            card = CustomCard(
+                icon=light["icon"] if light["value"] else light["status-icon"]["off"],
+                text=light["text"],
+                value=light["value"],
+                color=light["color"],
+                description=light["description"],
+            )
+            container.add_widget(card)
+            self.light_cards[light["key"]] = card
 
         # Sensor cards
         sensor_data = [
@@ -351,47 +338,18 @@ class DashboardScreen(MDScreen):
             container.add_widget(card)
             self.sensor_cards[sensor["key"]] = card
 
-        # Light cards
-        light_data = [
-            {
-                "icon": "sprout",
-                "text": "Status",
-                "key": "Status",
-                "value": True,
-                "description": f"Updated as of {self.data.get('Time', '-')}",
-                "status-icon": {
-                    "on": "sprout",
-                    "off": "lightbulb-off-outline",
-                },
-                "color": [0.694, 1, 0.694],
-            },
-            {
-                "icon": "lightbulb-on-outline",
-                "text": "Grow Light",
-                "key": "Grow Light Status",
-                "value": self.data.get("Grow Light Status") == "On",
-                "description": "6:00 AM - 6:00 PM",
-                "status-icon": {
-                    "on": "lightbulb-on-outline",
-                    "off": "lightbulb-off-outline",
-                },
-                "color": [1, 0.64, 0],
-            },
-        ]
-
-        for light in light_data:
-            card = CustomCard(
-                icon=light["icon"] if light["value"] else light["status-icon"]["off"],
-                text=light["text"],
-                value=light["value"],
-                color=light["color"],
-                description=light["description"],
-            )
-            container.add_widget(card)
-            self.light_cards[light["key"]] = card
-
     def update_sensor_cards(self):
         # Update sensor cards
+        time_str = self.data.get("Time", "-")
+        if time_str and time_str != "-":
+            try:
+                dt = datetime.strptime(time_str, "%m/%d/%Y, %I:%M:%S %p")
+                self.formatted_time = dt.strftime("%I:%M %p")
+            except Exception:
+                self.formatted_time = "-"
+        else:
+            self.formatted_time = "-"
+
         if "pH Level" in self.sensor_cards:
             new_value = float(self.data.get("pH Level") or 0)
             self.sensor_cards["pH Level"].animate_value(new_value)
@@ -406,16 +364,27 @@ class DashboardScreen(MDScreen):
 
         # Update light cards (icon swap, no animation needed)
         if "Grow Light Status" in self.light_cards:
-            is_on = self.data.get("Grow Light Status") == "On"
-            light_card = self.light_cards["Grow Light Status"]
-            light_card.value = is_on
-            light_card.icon = (
-                "lightbulb-on-outline" if is_on else "lightbulb-off-outline"
-            )
+            new_value = self.data.get("Grow Light Status", False)
+
+            # If new_value is string, fix it to boolean
+            if isinstance(new_value, str):
+                new_value = new_value.lower() == "true"
+
+            card = self.light_cards["Grow Light Status"]  # <-- you missed this line
+
+            card.update_value(new_value)
+
+            # Update the icon manually
+            if new_value:
+                card.update_icon("lightbulb-on-outline")
+            else:
+                card.update_icon("lightbulb-off-outline")
 
         if "Status" in self.light_cards:
             status_card = self.light_cards["Status"]
-            status_card.description = f"Updated as of {self.data.get('Time', '-')}"
+            status_card.description = (
+                f"Updated as of {self.formatted_time}"  # <-- use formatted_time here
+            )
 
 
 class LoginScreen(MDScreen):

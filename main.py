@@ -7,12 +7,21 @@ from screens import LoginScreen, SignupScreen, TermsConditionsScreen, DashboardS
 class MainApp(MDApp):
 
     def build(self):
+        Builder.load_file("screens/kv/login_screen.kv")
+        Builder.load_file("screens/kv/signup_screen.kv")
+        Builder.load_file("screens/kv/terms_conditions.kv")
+        Builder.load_file("screens/kv/dashboard.kv")
+        Builder.load_file("widgets/kv/floating_window.kv")
+        Builder.load_file("widgets/kv/image.kv")
+        Builder.load_file("widgets/kv/card.kv")
+
         sm = MDScreenManager()
         sm.add_widget(LoginScreen(name="login"))
         sm.add_widget(SignupScreen(name="signup"))
         sm.add_widget(TermsConditionsScreen(name="termsconditions"))
         sm.add_widget(DashboardScreen(name="dashboard"))
         # sm.current = "dashboard"
+
         self.theme_cls.theme_style = "Dark"
         return sm
 
