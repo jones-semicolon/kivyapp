@@ -20,16 +20,6 @@ try {
   process.exit(1);
 }
 
-// try {
-//   serviceAccount = JSON.parse(
-//     fs.readFileSync("./service_account.json", "utf8"),
-//   );
-//   console.log(serviceAccount);
-// } catch (err) {
-//   console.error("❌ Failed to load service account JSON:", err.message);
-//   process.exit(1);
-// }
-
 // Set up Google Drive authentication
 const auth = new google.auth.GoogleAuth({
   credentials: serviceAccount,
@@ -144,6 +134,7 @@ app.post("/data", async (req, res) => {
 
 app.post("/user", async (req, res) => {
   const { username, password } = req.body;
+  sheet = "users";
 
   if (!username || !password) {
     return res.status(400).json({ error: "Important data not provided" });
@@ -167,6 +158,36 @@ app.post("/user", async (req, res) => {
   } catch (err) {
     console.error("❌ Error saving data:", err);
     res.status(500).json({ error: "Failed to save data." });
+  }
+});
+
+app.get("/user", async (_, res) => {
+  const sheet = "users";
+
+  try {
+    const result = await sheets.spreadsheets.values.get({
+      spreadsheetId: SPREADSHEET_ID,
+      range: `${sheet}!A:E`, // Adjust columns as needed
+    });
+
+    const rows = result.data.values;
+    if (!rows || rows.length === 0) {
+      return res.status(404).json({ message: "No data found." });
+    }
+
+    // Optionally return the data as an array of objects with headers
+    const [headers, ...data] = rows;
+    const formattedData = data.map((row) =>
+      headers.reduce((obj, header, i) => {
+        obj[header] = row[i] || "";
+        return obj;
+      }, {}),
+    );
+
+    res.status(200).json(formattedData);
+  } catch (err) {
+    console.error("❌ Error reading data:", err);
+    res.status(500).json({ error: "Failed to read data." });
   }
 });
 
