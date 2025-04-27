@@ -76,6 +76,8 @@ requirements =
     sh==2.2.2,
     uritemplate==4.1.1,
     urllib3==2.3.0,
+    passlib,
+    bcrypt==4.3.0,
 
 # (str) Custom source folders for requirements
 # Sets custom source for any requirements with recipes
