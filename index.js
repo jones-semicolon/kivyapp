@@ -44,6 +44,9 @@ async function ensureSheetHeader(sheet, SPREADSHEET_ID) {
     "Water Level",
     "Humidity",
     "pH Level",
+    "TDS",
+    "Right Pump Status",
+    "Left Pump Status",
   ];
 
   // Check if the sheet has data
@@ -96,6 +99,9 @@ app.post("/data", async (req, res) => {
     waterLevelDistance,
     humidity,
     pHLevel,
+    TDS,
+    rightPumpStatus,
+    leftPumpStatus,
   } = req.body;
   // const SPREADSHEET_ID = "17Q0-wDURshAZycye4zLDHclQ0VFzQwl-SDlCMeGaIdk";
   const sheet = "hydroponics";
@@ -106,6 +112,9 @@ app.post("/data", async (req, res) => {
       waterLevelDistance,
       humidity,
       pHLevel,
+      TDS,
+      rightPumpStatus,
+      leftPumpStatus,
     ],
   ];
 
