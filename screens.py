@@ -17,6 +17,9 @@ from kivy.uix.modalview import ModalView
 from kivymd.uix.menu import MDDropdownMenu
 from kivy.network.urlrequest import UrlRequest
 from kivy.clock import mainthread
+from datetime import datetime
+from kivy.clock import Clock
+from kivy.animation import Animation
 
 # Load KV files manually
 Builder.load_file("login_screen.kv")
@@ -116,6 +119,11 @@ class CustomCircularCard(MDCard):
         self.max_value = float(max_value)
         self.color = color
 
+    def animate_value(self, new_value, duration=0.5):
+        Animation.cancel_all(self, "value")  # Cancel any previous animation
+        anim = Animation(value=new_value, duration=duration, t="out_quad")
+        anim.start(self)
+
 
 class CustomCard(MDCard):
     text = StringProperty()
@@ -144,77 +152,195 @@ class CustomCard(MDCard):
 class DashboardScreen(MDScreen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.create_sensor_cards()
         self.floatingwindow = None
+        self.data = None  # No data yet
+        self.sensor_data = []
+        self.pumps = []
+        self.light = []
 
-    sensor_data = [
-        {
-            "icon": "landslide",
-            "text": "TDS",
-            "value": 720,
-            "max_value": 1040,
-            "unit": "PPM",
-            "color": [0.8, 0.7, 0.5],
-        },
-        {
-            "icon": "ph",
-            "text": "pH Level",
-            "value": 1.2,
-            "max_value": 7.5,
-            "unit": "pH",
-            "color": [0.31373, 0.78431, 0.47059],
-        },
-        {
-            "icon": "weather-windy",
-            "text": "Humidity",
-            "value": 69,
-            "max_value": 100,
-            "unit": "%",
-            "color": [0, 0.74, 1],
-        },
-        {
-            "icon": "waves-arrow-up",
-            "text": "Water Level",
-            "value": 89,
-            "max_value": 100,
-            "unit": "L",
-            "color": [0.11, 0.56, 0.8],
-        },
-    ]
-    pumps = [
-        {
-            "icon": "pump",
-            "text": "Left Pump",
-            "value": False,
-            "color": [1, 0.64, 0],
-        },
-        {
-            "icon": "pump",
-            "text": "Right Pump",
-            "value": True,
-            "color": [1, 0.64, 0],
-        },
-    ]
-    light = {
-        "icon": "lightbulb-on-outline",
-        "text": "Grow Light",
-        "description": "6:00 AM - 6:00 PM",
-        "value": False,
-        "color": [1, 0.64, 0],
-    }
+    def on_enter(self, *args):
+        self.load_data()
+        Clock.schedule_interval(
+            lambda dt: self.load_data(), 10
+        )  # Reload every 10s       self.load_data()  # Load from server
+
+    def load_data(self):
+        url = f"{API_BASE_URL}/data/hydroponics"
+        UrlRequest(
+            url,
+            on_success=self.got_datas,
+            on_error=self.on_error,
+            on_failure=self.on_error,
+            timeout=10,
+            decode=True,
+        )
+
+    @mainthread
+    def on_error(self, request, error):
+        # handle network or parsing errors
+        print("Failed to fetch images:", error)
+
+    @mainthread
+    def got_datas(self, request, result):
+        if not result:
+            print("No data provided.")
+            return
+
+        latest_entry = None
+        latest_time = None
+
+        for entry in result:
+            time_str = entry.get("Time")
+            if not time_str:
+                continue
+            try:
+                dt = datetime.strptime(time_str, "%m/%d/%Y, %I:%M:%S %p")
+            except (ValueError, TypeError):
+                print(f"Skipping invalid time: {time_str}")
+                continue
+
+            if latest_time is None or dt > latest_time:
+                latest_time = dt
+                latest_entry = entry
+
+        if latest_entry is None:
+            print("No valid entries.")
+            return
+
+        self.data = latest_entry
+
+        if not hasattr(self, "sensor_cards"):
+            self.create_sensor_cards()  # first time create
+        else:
+            self.update_sensor_cards()  # afterwards just update
+
+    def generate_sensor_data(self):
+        """Generate sensor data after self.data is available."""
+        self.sensor_data = [
+            {
+                "icon": "landslide",
+                "text": "TDS",
+                "value": 720,  # hardcoded or load from data
+                "max_value": 1040,
+                "unit": "PPM",
+                "color": [0.8, 0.7, 0.5],
+            },
+            {
+                "icon": "ph",
+                "text": "pH Level",
+                # "value": float(self.data.get("pH Level", 0)),
+                "value": 2.4,
+                "max_value": 7.5,
+                "unit": "pH",
+                "color": [0.31373, 0.78431, 0.47059],
+            },
+            {
+                "icon": "weather-windy",
+                "text": "Humidity",
+                "value": float(self.data.get("Humidity", 0)),
+                "max_value": 100,
+                "unit": "%",
+                "color": [0, 0.74, 1],
+            },
+            {
+                "icon": "waves-arrow-up",
+                "text": "Water Level",
+                "value": float(self.data.get("Water Level", 0)),
+                "max_value": 100,
+                "unit": "L",
+                "color": [0.11, 0.56, 0.8],
+            },
+        ]
+
+        self.pumps = [
+            {
+                "icon": "pump",
+                "text": "Left Pump",
+                "value": False,  # maybe from data
+                "color": [0.3020, 0.3059, 0.3098],
+            },
+            {
+                "icon": "pump",
+                "text": "Right Pump",
+                "value": True,
+                "color": [0.3020, 0.3059, 0.3098],
+            },
+        ]
+
+        self.light = [
+            {
+                "icon": "sprout",
+                "text": "Status",
+                "value": True,
+                "description": "Updated as of -",  # can use Time from self.data
+                "status-icon": {
+                    "on": "sprout",
+                    "off": "lightbulb-off-outline",
+                },
+                "color": [0.694, 1, 0.694],
+            },
+            {
+                "icon": "lightbulb-on-outline",
+                "text": "Grow Light",
+                "description": "6:00 AM - 6:00 PM",
+                "value": self.data.get("Grow Light Status", "Off") == "On",
+                "status-icon": {
+                    "on": "lightbulb-on-outline",
+                    "off": "lightbulb-off-outline",
+                },
+                "color": [1, 0.64, 0],
+            },
+        ]
 
     def create_sensor_cards(self):
         container = self.ids.container
-        full_container = self.ids.full_container
-        full_card = CustomCard(
-            icon=self.light["icon"] if self.light["value"] else "lightbulb-off-outline",
-            text=self.light["text"],
-            description=self.light["description"],
-            value=self.light["value"],
-            color=self.light["color"],
-        )
-        full_container.add_widget(full_card)
-        for sensor in self.sensor_data:
+        container.clear_widgets()
+
+        # Initialize empty dicts to store cards
+        self.sensor_cards = {}
+        self.light_cards = {}
+
+        # Sensor cards
+        sensor_data = [
+            {
+                "icon": "landslide",
+                "text": "TDS",
+                "key": "TDS",
+                "value": 720,  # No dynamic data yet
+                "max_value": 1040,
+                "unit": "PPM",
+                "color": [0.8, 0.7, 0.5],
+            },
+            {
+                "icon": "ph",
+                "text": "pH Level",
+                "key": "pH Level",
+                "value": float(self.data.get("pH Level") or 0),
+                "max_value": 7.5,
+                "unit": "pH",
+                "color": [0.31373, 0.78431, 0.47059],
+            },
+            {
+                "icon": "weather-windy",
+                "text": "Humidity",
+                "key": "Humidity",
+                "value": float(self.data.get("Humidity") or 0),
+                "max_value": 100,
+                "unit": "%",
+                "color": [0, 0.74, 1],
+            },
+            {
+                "icon": "waves-arrow-up",
+                "text": "Water Level",
+                "key": "Water Level",
+                "value": float(self.data.get("Water Level") or 0),
+                "max_value": 100,
+                "unit": "L",
+                "color": [0.11, 0.56, 0.8],
+            },
+        ]
+
+        for sensor in sensor_data:
             card = CustomCircularCard(
                 text=sensor["text"],
                 value=sensor["value"],
@@ -223,50 +349,73 @@ class DashboardScreen(MDScreen):
                 color=sensor["color"],
             )
             container.add_widget(card)
-        for pumps in self.pumps:
+            self.sensor_cards[sensor["key"]] = card
+
+        # Light cards
+        light_data = [
+            {
+                "icon": "sprout",
+                "text": "Status",
+                "key": "Status",
+                "value": True,
+                "description": f"Updated as of {self.data.get('Time', '-')}",
+                "status-icon": {
+                    "on": "sprout",
+                    "off": "lightbulb-off-outline",
+                },
+                "color": [0.694, 1, 0.694],
+            },
+            {
+                "icon": "lightbulb-on-outline",
+                "text": "Grow Light",
+                "key": "Grow Light Status",
+                "value": self.data.get("Grow Light Status") == "On",
+                "description": "6:00 AM - 6:00 PM",
+                "status-icon": {
+                    "on": "lightbulb-on-outline",
+                    "off": "lightbulb-off-outline",
+                },
+                "color": [1, 0.64, 0],
+            },
+        ]
+
+        for light in light_data:
             card = CustomCard(
-                icon=pumps["icon"] if pumps["value"] else "pump-off",
-                text=pumps["text"],
-                value=pumps["value"],
-                color=pumps["color"],
+                icon=light["icon"] if light["value"] else light["status-icon"]["off"],
+                text=light["text"],
+                value=light["value"],
+                color=light["color"],
+                description=light["description"],
             )
             container.add_widget(card)
-        # circularCard = CustomCircularCard(
-        #     text=self.sensor_data["text"],
-        #     value=self.sensor_data["value"],
-        #     max_value=self.sensor_data["max_value"],
-        #     unit=self.sensor_data["unit"],
-        #     color=self.sensor_data["color"],
-        # )
-        # container.add_widget(circularCard)
+            self.light_cards[light["key"]] = card
 
-    def create_window(self):
-        if not self.floatingwindow:
-            self.floatingwindow = FloatingWindow()
-            self.add_widget(self.floatingwindow, index=0)
+    def update_sensor_cards(self):
+        # Update sensor cards
+        if "pH Level" in self.sensor_cards:
+            new_value = float(self.data.get("pH Level") or 0)
+            self.sensor_cards["pH Level"].animate_value(new_value)
 
-    def open_menu(self, caller):
-        menu_items = [
-            {
-                "text": "Logout",
-                "viewclass": "OneLineListItem",
-                "on_release": self.logout,
-            }
-        ]
-        self.menu = MDDropdownMenu(
-            caller=caller,
-            items=menu_items,
-            hor_growth="left",  # This makes menu grow to the left
-            position="bottom",  # Position below the caller
-            width_mult=0,
-            width="32dp",
-        )
-        self.menu.open()
+        if "Humidity" in self.sensor_cards:
+            new_value = float(self.data.get("Humidity") or 0)
+            self.sensor_cards["Humidity"].animate_value(new_value)
 
-    def logout(self):
-        print("Logging out...")
-        self.menu.dismiss()
-        self.manager.current = "login"
+        if "Water Level" in self.sensor_cards:
+            new_value = float(self.data.get("Water Level") or 0)
+            self.sensor_cards["Water Level"].animate_value(new_value)
+
+        # Update light cards (icon swap, no animation needed)
+        if "Grow Light Status" in self.light_cards:
+            is_on = self.data.get("Grow Light Status") == "On"
+            light_card = self.light_cards["Grow Light Status"]
+            light_card.value = is_on
+            light_card.icon = (
+                "lightbulb-on-outline" if is_on else "lightbulb-off-outline"
+            )
+
+        if "Status" in self.light_cards:
+            status_card = self.light_cards["Status"]
+            status_card.description = f"Updated as of {self.data.get('Time', '-')}"
 
 
 class LoginScreen(MDScreen):
