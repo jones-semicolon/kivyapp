@@ -206,7 +206,7 @@ app.get("/data/:sheet", async (req, res) => {
   try {
     const result = await sheets.spreadsheets.values.get({
       spreadsheetId: SPREADSHEET_ID,
-      range: `${sheet}!A:E`, // Adjust columns as needed
+      range: `${sheet}!A:H`, // Adjust columns as needed
     });
 
     const rows = result.data.values;
@@ -275,7 +275,7 @@ app.get("/data/:sheet", async (req, res) => {
   try {
     const result = await sheets.spreadsheets.values.get({
       spreadsheetId: SPREADSHEET_ID,
-      range: `${sheet}!A:E`, // Adjust columns as needed
+      range: `${sheet}!A:H`, // Adjust columns as needed
     });
 
     const rows = result.data.values;
