@@ -3,6 +3,7 @@ const bodyParser = require("body-parser");
 const { google } = require("googleapis");
 const fs = require("fs");
 const stream = require("stream");
+const bcrypt = require("bcryptjs");
 require("dotenv").config();
 
 const app = express();
@@ -47,7 +48,13 @@ app.get("/test", async (req, res) => {
 });
 
 async function ensureSheetHeader(sheet, SPREADSHEET_ID) {
-  const header = ["Timestamp", "Value", "Min", "Max", "Unit"];
+  const header = [
+    "Time",
+    "Grow Light Status",
+    "Water Level",
+    "Humidity",
+    "pH Level",
+  ];
 
   // Check if the sheet has data
   const existing = await sheets.spreadsheets.values.get({
@@ -93,22 +100,28 @@ async function ensureSheetExists(sheetName) {
 }
 
 app.post("/data", async (req, res) => {
-  const { readTimestamp, minValue, maxValue, sensor, unit, value } = req.body;
+  const {
+    arduinoTime,
+    growLightsStatus,
+    waterLevelDistance,
+    humidity,
+    pHLevel,
+  } = req.body;
   // const SPREADSHEET_ID = "17Q0-wDURshAZycye4zLDHclQ0VFzQwl-SDlCMeGaIdk";
-  const sheet = sensor;
+  const sheet = "hydroponics";
   const values = [
     [
-      new Date(readTimestamp).toLocaleString(),
-      value,
-      minValue || "",
-      maxValue || "",
-      unit || "",
+      new Date(arduinoTime).toLocaleString(),
+      growLightsStatus,
+      waterLevelDistance,
+      humidity,
+      pHLevel,
     ],
   ];
 
-  if (!readTimestamp || !value || !sensor) {
-    return res.status(400).json({ error: "Important data not provided" });
-  }
+  // if (!readTimestamp || !value || !sensor) {
+  //   return res.status(400).json({ error: "Important data not provided" });
+  // }
 
   try {
     await ensureSheetExists(sheet);
@@ -126,6 +139,103 @@ app.post("/data", async (req, res) => {
   } catch (err) {
     console.error("❌ Error saving data:", err);
     res.status(500).json({ error: "Failed to save data." });
+  }
+});
+
+app.post("/user", async (req, res) => {
+  const { username, password } = req.body;
+
+  if (!username || !password) {
+    return res.status(400).json({ error: "Important data not provided" });
+  }
+
+  try {
+    const hashedPassword = await bcrypt.hash(password, 10); // 10 = salt rounds
+    const values = [[new Date().toLocaleString(), username, hashedPassword]];
+
+    await ensureSheetExists(sheet);
+
+    await sheets.spreadsheets.values.append({
+      spreadsheetId: SPREADSHEET_ID,
+      range: `${sheet}!A:C`,
+      valueInputOption: "USER_ENTERED",
+      resource: { values },
+    });
+
+    // await formatSheet(sheet, values); // Optional
+    res.status(200).json({ message: "Data saved" });
+  } catch (err) {
+    console.error("❌ Error saving data:", err);
+    res.status(500).json({ error: "Failed to save data." });
+  }
+});
+
+app.get("/data/:sheet", async (req, res) => {
+  const sheet = req.params.sheet;
+
+  try {
+    const result = await sheets.spreadsheets.values.get({
+      spreadsheetId: SPREADSHEET_ID,
+      range: `${sheet}!A:E`, // Adjust columns as needed
+    });
+
+    const rows = result.data.values;
+    if (!rows || rows.length === 0) {
+      return res.status(404).json({ message: "No data found." });
+    }
+
+    // Optionally return the data as an array of objects with headers
+    const [headers, ...data] = rows;
+    const formattedData = data.map((row) =>
+      headers.reduce((obj, header, i) => {
+        obj[header] = row[i] || "";
+        return obj;
+      }, {}),
+    );
+
+    res.status(200).json(formattedData);
+  } catch (err) {
+    console.error("❌ Error reading data:", err);
+    res.status(500).json({ error: "Failed to read data." });
+  }
+});
+
+// POST endpoint to upload an image to Google Drive
+app.post("/upload-image", async (req, res) => {
+  try {
+    const { filename, mimeType, imageBase64 } = req.body;
+    if (!filename || !mimeType || !imageBase64) {
+      return res
+        .status(400)
+        .json({ error: "Missing filename, mimeType or imageBase64" });
+    }
+
+    // Convert base64 string to a buffer
+    const buffer = Buffer.from(imageBase64, "base64");
+    console.log(buffer);
+    // Create a stream from the buffer
+    const bufferStream = new stream.PassThrough();
+    bufferStream.end(buffer);
+
+    const fileMetadata = {
+      name: filename,
+      parents: [process.env.FOLDER_ID], // Replace with actual folder ID
+    };
+    const media = {
+      mimeType,
+      body: bufferStream,
+    };
+
+    const response = await drive.files.create({
+      resource: fileMetadata,
+      media: media,
+      fields: "id",
+    });
+
+    res.status(200).json({ fileId: response.data.id });
+  } catch (err) {
+    console.error("Error uploading image:", err);
+    res.status(500).json({ error: err.message });
   }
 });
 
