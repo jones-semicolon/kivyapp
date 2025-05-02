@@ -7,6 +7,7 @@ from widgets.floating_window import FloatingWindow
 from kivy.lang import Builder
 from constants import API_BASE_URL
 from kivymd.uix.menu import MDDropdownMenu
+from kivy.app import App
 
 
 class DashboardScreen(MDScreen):
@@ -315,4 +316,7 @@ class DashboardScreen(MDScreen):
     def logout(self):
         print("Logging out...")
         self.menu.dismiss()
+        app = App.get_running_app()
+        if app.store.exists("user"):
+            app.store.delete("user")
         self.manager.current = "login"

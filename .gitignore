@@ -4,3 +4,4 @@
 .kivy/
 __pycache__/
 assets/service_account.json
+user_store.json

@@ -6,14 +6,25 @@ from constants import API_BASE_URL
 from kivy.network.urlrequest import UrlRequest
 from passlib.hash import (
     bcrypt,
-)  # Use passlib's bcrypt hashing for password verification
+)
+from kivy.storage.jsonstore import JsonStore
+from kivy.app import App
 
 
 class LoginScreen(MDScreen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.data = None
-        self.load_data()  # Load user data when the screen initializes
+        self.app = App.get_running_app()
+
+    def on_enter(self):
+        if self.app.store.exists("user"):
+            Clock.schedule_once(self.switch_to_termsconditions, 0)
+        else:
+            self.load_data()
+
+    def switch_to_termsconditions(self, *args):
+        self.manager.current = "dashboard"
 
     def load_data(self):
         # URL to fetch data from the API
@@ -52,9 +63,10 @@ class LoginScreen(MDScreen):
                 (user for user in self.data if user["username"] == username), None
             )
 
-            if user and bcrypt.verify(
-                password, user["password"]
-            ):  # Verify password hash
+            if user and bcrypt.verify(password, user["password"]):
+                # Save login status
+                self.app.store.put("user", username=username)
+
                 self.dialog = MDDialog(
                     title="Success",
                     text="Login Successfully",
@@ -63,6 +75,7 @@ class LoginScreen(MDScreen):
                     ],
                 )
                 self.dialog.open()
+
             else:
                 self.dialog = MDDialog(
                     title="Error",
