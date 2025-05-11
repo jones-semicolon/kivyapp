@@ -342,30 +342,49 @@ app.post("/upload-image", async (req, res) => {
 app.get("/images/:folderId", async (req, res) => {
   try {
     const folderId = req.params.folderId;
+    const imagesByFolder = await getImagesByFolder(folderId);
+    res.status(200).json({ imagesByFolder });
+  } catch (err) {
+    console.error("Error retrieving images by folder:", err);
+    res.status(500).json({ error: err.message });
+  }
+});
 
-    // Query to get images in the folder
-    const query = `'${folderId}' in parents and mimeType contains 'image/' and trashed = false`;
+const getImagesByFolder = async (folderId, folderName = "Root") => {
+  const imagesByFolder = {};
+  const foldersToProcess = [{ id: folderId, name: folderName }];
 
+  while (foldersToProcess.length > 0) {
+    const currentFolder = foldersToProcess.pop();
+
+    // Retrieve files and folders within the current folder
     const response = await drive.files.list({
-      q: query,
-      fields: "files(id, name)",
+      q: `'${currentFolder.id}' in parents and trashed = false`,
+      fields: "files(id, name, mimeType)",
     });
 
     const files = response.data.files || [];
 
-    // Generate direct download links
-    const links = files.map((file) => ({
-      id: file.id,
-      name: file.name,
-      downloadUrl: `https://drive.google.com/uc?export=download&id=${file.id}`,
-    }));
-
-    res.status(200).json({ images: links });
-  } catch (err) {
-    console.error("Error retrieving image links:", err);
-    res.status(500).json({ error: err.message });
+    for (const file of files) {
+      if (file.mimeType === "application/vnd.google-apps.folder") {
+        // If the file is a folder, add it to the list to process
+        foldersToProcess.push({ id: file.id, name: file.name });
+      } else if (file.mimeType.startsWith("image/")) {
+        // If the file is an image, add it to the corresponding folder
+        if (!imagesByFolder[currentFolder.name]) {
+          imagesByFolder[currentFolder.name] = [];
+        }
+        imagesByFolder[currentFolder.name].push({
+          id: file.id,
+          name: file.name,
+          downloadUrl: `https://drive.google.com/uc?export=download&id=${file.id}`,
+        });
+      }
+    }
   }
-});
+
+  return imagesByFolder;
+};
 
 app.listen(PORT, () => {
   console.log(`🚀 Server running at http://localhost:${PORT}`);
