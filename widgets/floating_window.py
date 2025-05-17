@@ -1,6 +1,7 @@
 from kivymd.uix.floatlayout import MDFloatLayout
 from kivy.network.urlrequest import UrlRequest
 from kivy.clock import mainthread
+from kivymd.uix.button import MDRaisedButton
 from widgets.smart_tile_from_url import SmartTileFromURL
 from constants import API_BASE_URL, FOLDER_ID
 
@@ -23,9 +24,18 @@ class FloatingWindow(MDFloatLayout):
 
     @mainthread
     def got_images(self, _, result):
-        for file in result.get("images", []):
-            tile = SmartTileFromURL(source=file["downloadUrl"])
-            self.ids.grid.add_widget(tile)
+        # Ensure imagesByFolder is a dictionary, not a list
+        images_by_folder = result.get("imagesByFolder", {})
+
+        for folderName in images_by_folder.items():
+            # Create a button for each folder
+            folder_button = MDRaisedButton(text=str(folderName))
+            self.ids.grid.add_widget(folder_button)
+
+            # # Add each file in the folder
+            # for file in files:
+            #     tile = SmartTileFromURL(source=file["downloadUrl"])
+            #     self.ids.grid.add_widget(tile)
 
     @mainthread
     def on_error(self, _, error):

@@ -13,6 +13,7 @@ class CustomCircularCard(MDCard):
     unit = StringProperty()
     value = NumericProperty()
     max_value = NumericProperty(1)
+    min_value = NumericProperty(0)
     color = ListProperty([1, 1, 1])
 
     def animate_value(self, new_value, duration=0.5):

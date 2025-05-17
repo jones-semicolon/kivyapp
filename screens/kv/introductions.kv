@@ -1,0 +1,403 @@
+<IntroductionsScreen>:
+    name: "introductions"
+    MDBoxLayout:
+        orientation: "vertical"
+        padding: "20dp"
+        spacing: "10dp"
+        size_hint: 1, 1
+        pos_hint: {"center_y": 0.5}
+        
+        MDLabel:
+            text: "Service Manual"
+            font_style: "H4"
+            halign: "center"
+            size_hint_y: None
+            height: self.texture_size[1] + dp(10)
+
+        MDScrollView:
+            size_hint: 1, 1
+            do_scroll_x: False
+
+            MDBoxLayout:
+                orientation: "vertical"
+                adaptive_height: True  # Ensure this container adapts to text height
+                padding: "10dp"
+                spacing: dp(5)
+                MDLabel:
+                    text: "1. Introductions"
+                    size_hint_y: None
+                    font_style: "Subtitle1"
+                    height: self.texture_size[1]  # Ensure the label expands to fit text
+                    text_size: self.width, None  # Prevent text cutoff
+                    halign: "left"
+                    valign: "top"
+
+                
+                MDLabel: 
+                    text: "Welcome to the Automated Indoor Hydroponics System, an intelligent solution designed to simplify the cultivation of crops like Bok Choy using nutrient sensing, IoT automation, and image processing. This system ensures nutrient management and daily monitoring to optimize plant growth."
+                    size_hint_y: None
+                    font_style: "Body1"
+                    height: self.texture_size[1]  # Ensure the label expands to fit text
+                    text_size: self.width, None  # Prevent text cutoff
+                    padding: "20dp", "0dp", "0dp", "0dp"
+                    halign: "left"
+                    valign: "top"
+                MDLabel:
+                    text: "2. System Overview"
+                    size_hint_y: None
+                    font_style: "Subtitle1"
+                    height: self.texture_size[1]  # Ensure the label expands to fit text
+                    text_size: self.width, None  # Prevent text cutoff
+                    halign: "left"
+                    valign: "top"
+                MDLabel:
+                    text: "Nutrient and pH Sensing"
+                    size_hint_y: None
+                    font_style: "Subtitle1"
+                    height: self.texture_size[1]  # Ensure the label expands to fit text
+                    text_size: self.width, None  # Prevent text cutoff
+                    halign: "left"
+                    valign: "top"
+
+                
+                MDLabel: 
+                    text: "Automatically monitors and adjusts nutrients (TDS) at 10:00 AM. If the TDS is outside the optimal range 1050 to 1400 ppm, the system activates either the nutrient solution pump or dilution pump to bring the level back to a calibrated midpoint 1200 ppm. For pH levels daily at 11:00 AM to ensure optimal growing conditions. If the pH is too high or too low, a precise amount of pH Up or pH Down solution is dosed using peristaltic pumps to bring it within the target range of 6 to 7 pH."
+                    size_hint_y: None
+                    font_style: "Body1"
+                    height: self.texture_size[1]  # Ensure the label expands to fit text
+                    text_size: self.width, None  # Prevent text cutoff
+                    padding: "20dp", "0dp", "0dp", "0dp"
+                    halign: "left"
+                    valign: "top"
+                MDLabel:
+                    text: "Water Level Monitoring and Refill System"
+                    size_hint_y: None
+                    font_style: "Subtitle1"
+                    height: self.texture_size[1]  # Ensure the label expands to fit text
+                    text_size: self.width, None  # Prevent text cutoff
+                    halign: "left"
+                    valign: "top"
+
+                
+                MDLabel: 
+                    text: "An ultrasonic sensor checks the misting tank’s water level. If low, a solenoid valve automatically opens and refills the tank up to 14 inches. The valve automatically closes once the target volume is reached."
+                    size_hint_y: None
+                    font_style: "Body1"
+                    height: self.texture_size[1]  # Ensure the label expands to fit text
+                    text_size: self.width, None  # Prevent text cutoff
+                    padding: "20dp", "0dp", "0dp", "0dp"
+                    halign: "left"
+                    valign: "top"
+                MDLabel:
+                    text: "Drain and Refill Cycle"
+                    size_hint_y: None
+                    font_style: "Subtitle1"
+                    height: self.texture_size[1]  # Ensure the label expands to fit text
+                    text_size: self.width, None  # Prevent text cutoff
+                    halign: "left"
+                    valign: "top"
+
+                
+                MDLabel: 
+                    text: "A switch manually activates refill is then triggered through the flow-based system to fill up a 20L of water."
+                    size_hint_y: None
+                    font_style: "Body1"
+                    height: self.texture_size[1]  # Ensure the label expands to fit text
+                    text_size: self.width, None  # Prevent text cutoff
+                    padding: "20dp", "0dp", "0dp", "0dp"
+                    halign: "left"
+                    valign: "top"
+                MDLabel:
+                    text: "Dual Pump Alternation"
+                    size_hint_y: None
+                    font_style: "Subtitle1"
+                    height: self.texture_size[1]  # Ensure the label expands to fit text
+                    text_size: self.width, None  # Prevent text cutoff
+                    halign: "left"
+                    valign: "top"
+
+                
+                MDLabel: 
+                    text: "The active pump switches every 3 hours for balanced usage. This function helps prevent mechanical fatigue and maintains equal operating time for both pumps over long-term use."
+                    size_hint_y: None
+                    font_style: "Body1"
+                    height: self.texture_size[1]  # Ensure the label expands to fit text
+                    text_size: self.width, None  # Prevent text cutoff
+                    padding: "20dp", "0dp", "0dp", "0dp"
+                    halign: "left"
+                    valign: "top"
+                MDLabel:
+                    text: "Humidity Monitoring"
+                    size_hint_y: None
+                    font_style: "Subtitle1"
+                    height: self.texture_size[1]  # Ensure the label expands to fit text
+                    text_size: self.width, None  # Prevent text cutoff
+                    halign: "left"
+                    valign: "top"
+
+                
+                MDLabel: 
+                    text: "A digital humidity sensor monitors ambient moisture levels around the growing area. Data is used for monitoring and used to trigger misting when it falls down below 50%."
+                    size_hint_y: None
+                    font_style: "Body1"
+                    height: self.texture_size[1]  # Ensure the label expands to fit text
+                    text_size: self.width, None  # Prevent text cutoff
+                    padding: "20dp", "0dp", "0dp", "0dp"
+                    halign: "left"
+                    valign: "top"
+                MDLabel:
+                    text: "Grow Light Automation"
+                    size_hint_y: None
+                    font_style: "Subtitle1"
+                    height: self.texture_size[1]  # Ensure the label expands to fit text
+                    text_size: self.width, None  # Prevent text cutoff
+                    halign: "left"
+                    valign: "top"
+
+                
+                MDLabel: 
+                    text: "Grow lights simulate natural sunlight and set on a timer from 6:00 PM to 6:00 AM. This ensures proper photosynthesis, especially in indoor or low-light setups. This schedule supports consistent photosynthesis and helps regulate plants for low-light and indoor environments."
+                    size_hint_y: None
+                    font_style: "Body1"
+                    height: self.texture_size[1]  # Ensure the label expands to fit text
+                    text_size: self.width, None  # Prevent text cutoff
+                    padding: "20dp", "0dp", "0dp", "0dp"
+                    halign: "left"
+                    valign: "top"
+                MDLabel:
+                    text: "Image Processing and Monitoring"
+                    size_hint_y: None
+                    font_style: "Subtitle1"
+                    height: self.texture_size[1]  # Ensure the label expands to fit text
+                    text_size: self.width, None  # Prevent text cutoff
+                    halign: "left"
+                    valign: "top"
+
+                
+                MDLabel: 
+                    text: "A camera captures plant images, which are uploaded to a cloud server for remote monitoring and growth analysis."
+                    size_hint_y: None
+                    font_style: "Body1"
+                    height: self.texture_size[1]  # Ensure the label expands to fit text
+                    text_size: self.width, None  # Prevent text cutoff
+                    padding: "20dp", "0dp", "0dp", "0dp"
+                    halign: "left"
+                    valign: "top"
+                MDLabel:
+                    text: "Display"
+                    size_hint_y: None
+                    font_style: "Subtitle1"
+                    height: self.texture_size[1]  # Ensure the label expands to fit text
+                    text_size: self.width, None  # Prevent text cutoff
+                    halign: "left"
+                    valign: "top"
+
+                
+                MDLabel: 
+                    text: "An LCD shows real-time data including TDS, pH, humidity, and waterflow for user monitoring. Offers a visual interface for easy monitoring without needing a separate mobile app."
+                    size_hint_y: None
+                    font_style: "Body1"
+                    height: self.texture_size[1]  # Ensure the label expands to fit text
+                    text_size: self.width, None  # Prevent text cutoff
+                    padding: "20dp", "0dp", "0dp", "0dp"
+                    halign: "left"
+                    valign: "top"
+                MDLabel:
+                    text: "3. Manual Tasks for Users"
+                    size_hint_y: None
+                    font_style: "Subtitle1"
+                    height: self.texture_size[1]  # Ensure the label expands to fit text
+                    text_size: self.width, None  # Prevent text cutoff
+                    halign: "left"
+                    valign: "top"
+                MDLabel:
+                    text: "Refilling the Nutrient Tank"
+                    size_hint_y: None
+                    font_style: "Subtitle1"
+                    height: self.texture_size[1]  # Ensure the label expands to fit text
+                    text_size: self.width, None  # Prevent text cutoff
+                    halign: "left"
+                    valign: "top"
+
+                
+                MDLabel: 
+                    text: "Every 3–7 days, depending on plant growth and water consumption or when the system stops adjusting TDS because the nutrient solution ran out. Always use clean containers and avoid contaminating the solution with dirt or debris. Make sure the solution is well-mixed and that there are no sediments that could clog the pump."
+                    size_hint_y: None
+                    font_style: "Body1"
+                    height: self.texture_size[1]  # Ensure the label expands to fit text
+                    text_size: self.width, None  # Prevent text cutoff
+                    padding: "20dp", "0dp", "0dp", "0dp"
+                    halign: "left"
+                    valign: "top"
+                MDLabel:
+                    text: "Refilling the pH Up and Down Solution"
+                    size_hint_y: None
+                    font_style: "Subtitle1"
+                    height: self.texture_size[1]  # Ensure the label expands to fit text
+                    text_size: self.width, None  # Prevent text cutoff
+                    halign: "left"
+                    valign: "top"
+
+                
+                MDLabel: 
+                    text: "Always check if there’s a liquid solution inside each. If low, refill with NutriHydro pH Up/Down solution. Usually every 1–2 weeks, depending on usage. Do not mix both pH solutions together or use water to dilute them. Always wear gloves when handling pH solutions as they are corrosive."
+                    size_hint_y: None
+                    font_style: "Body1"
+                    height: self.texture_size[1]  # Ensure the label expands to fit text
+                    text_size: self.width, None  # Prevent text cutoff
+                    padding: "20dp", "0dp", "0dp", "0dp"
+                    halign: "left"
+                    valign: "top"
+                MDLabel:
+                    text: "Manual Drain and Refill via Switch"
+                    size_hint_y: None
+                    font_style: "Subtitle1"
+                    height: self.texture_size[1]  # Ensure the label expands to fit text
+                    text_size: self.width, None  # Prevent text cutoff
+                    halign: "left"
+                    valign: "top"
+
+                
+                MDLabel: 
+                    text: "When the user wants to start draining for flushing the system, open the gate valve manually. The researchers suggest to drain every after harvest to refresh water and reset nutrients. For the refilling process, Flip the switch to “Refill” the flow- based refill will start refilling exactly 20 liters."
+                    size_hint_y: None
+                    font_style: "Body1"
+                    height: self.texture_size[1]  # Ensure the label expands to fit text
+                    text_size: self.width, None  # Prevent text cutoff
+                    padding: "20dp", "0dp", "0dp", "0dp"
+                    halign: "left"
+                    valign: "top"
+                MDLabel:
+                    text: "4. Safety Reminders"
+                    size_hint_y: None
+                    font_style: "Subtitle1"
+                    height: self.texture_size[1]  # Ensure the label expands to fit text
+                    text_size: self.width, None  # Prevent text cutoff
+                    halign: "left"
+                    valign: "top"
+
+                
+                MDLabel: 
+                    text: "Always ensure the system is plugged into a grounded outlet. Do not handle electrical components with wet hands."
+                    size_hint_y: None
+                    font_style: "Body1"
+                    height: self.texture_size[1]  # Ensure the label expands to fit text
+                    text_size: self.width, None  # Prevent text cutoff
+                    padding: "20dp", "0dp", "0dp", "0dp"
+                    halign: "left"
+                    valign: "top"
+                MDLabel: 
+                    text: "Wear gloves when handling pH Up, pH Down, and nutrient solutions. Never mix pH Up and pH Down together, doing so may cause harmful reactions. Mixed the Snap A and B according to the prescription of the manufacturer."
+                    size_hint_y: None
+                    font_style: "Body1"
+                    height: self.texture_size[1]  # Ensure the label expands to fit text
+                    text_size: self.width, None  # Prevent text cutoff
+                    padding: "20dp", "0dp", "0dp", "0dp"
+                    halign: "left"
+                    valign: "top"
+                MDLabel: 
+                    text: "Avoid water spillage near electrical components. Make sure water lines and tanks are secure and leak-free. Turn off the system before performing maintenance that involves water draining or sensor removal."
+                    size_hint_y: None
+                    font_style: "Body1"
+                    height: self.texture_size[1]  # Ensure the label expands to fit text
+                    text_size: self.width, None  # Prevent text cutoff
+                    padding: "20dp", "0dp", "0dp", "0dp"
+                    halign: "left"
+                    valign: "top"
+                MDLabel:
+                    text: "System Maintenance Procedures"
+                    size_hint_y: None
+                    font_style: "Subtitle1"
+                    height: self.texture_size[1]  # Ensure the label expands to fit text
+                    text_size: self.width, None  # Prevent text cutoff
+                    halign: "left"
+                    valign: "top"
+
+                
+                MDLabel: 
+                    text: "Tubes and hoses carry nutrient solutions, pH adjustments, and water throughout the system. Over time, these can become clogged due to mineral deposits, algae buildup, or long-term exposure to chemicals. Inspect all tubing weekly for any signs of discoloration, stiffness, or leaks. Replace any damaged or cracked tubing immediately to avoid blockages or leakage."
+                    size_hint_y: None
+                    font_style: "Body1"
+                    height: self.texture_size[1]  # Ensure the label expands to fit text
+                    text_size: self.width, None  # Prevent text cutoff
+                    padding: "20dp", "0dp", "0dp", "0dp"
+                    halign: "left"
+                    valign: "top"
+                MDLabel: 
+                    text: "Peristaltic, diaphragm, and water pump play a critical role in dosing nutrients and managing misting. If a pump fails, plant health can decline rapidly. Always check alternation logic, it should switch roles every 3 hours for balanced usage. Manually test each pump weekly to ensure they activate properly. Listen for abnormal noises from the pump that may indicate wear or clogging."
+                    size_hint_y: None
+                    font_style: "Body1"
+                    height: self.texture_size[1]  # Ensure the label expands to fit text
+                    text_size: self.width, None  # Prevent text cutoff
+                    padding: "20dp", "0dp", "0dp", "0dp"
+                    halign: "left"
+                    valign: "top"
+                MDLabel: 
+                    text: "The main tank and reservoir can accumulate algae, mineral residues, or organic debris over time. Rinse thoroughly with clean water to avoid contaminating the system. Drain and scrub tanks every after harvest using a soft brush and mild detergent."
+                    size_hint_y: None
+                    font_style: "Body1"
+                    height: self.texture_size[1]  # Ensure the label expands to fit text
+                    text_size: self.width, None  # Prevent text cutoff
+                    padding: "20dp", "0dp", "0dp", "0dp"
+                    halign: "left"
+                    valign: "top"
+                MDLabel: 
+                    text: "TDS and pH sensors should be rinsed with distilled water every 1–2 weeks to remove mineral buildup and retain its accurate reading. Ultrasonic water level sensors and humidity sensors should be gently wiped with a dry cloth to remove dust."
+                    size_hint_y: None
+                    font_style: "Body1"
+                    height: self.texture_size[1]  # Ensure the label expands to fit text
+                    text_size: self.width, None  # Prevent text cutoff
+                    padding: "20dp", "0dp", "0dp", "0dp"
+                    halign: "left"
+                    valign: "top"
+                MDLabel:
+                    text: "Troubleshooting Guide"
+                    size_hint_y: None
+                    font_style: "Subtitle1"
+                    height: self.texture_size[1]  # Ensure the label expands to fit text
+                    text_size: self.width, None  # Prevent text cutoff
+                    halign: "left"
+                    valign: "top"
+
+                
+                MDLabel: 
+                    text: "If the lights fail to turn on at the programmed time (6:00 PM to 6:00 AM), check the relay controlling their activation. Ensure that the lights are plugged into a functioning outlet and that the timer settings haven’t reset due to a power outage. Dust or moisture buildup on the lights can also reduce effectiveness, so regular cleaning is essential."
+                    size_hint_y: None
+                    font_style: "Body1"
+                    height: self.texture_size[1]  # Ensure the label expands to fit text
+                    text_size: self.width, None  # Prevent text cutoff
+                    padding: "20dp", "0dp", "0dp", "0dp"
+                    halign: "left"
+                    valign: "top"
+                MDLabel: 
+                    text: "If the LCD display fails to show data, appears blank, the issue usually stems from loose wiring, power loss, or software bugs. First, inspect the display's power supply and ensure all wires are securely connected. If the screen is powered but shows no readable output, it may be a programming issue. Restarting the system can often resolve temporary glitches."
+                    size_hint_y: None
+                    font_style: "Body1"
+                    height: self.texture_size[1]  # Ensure the label expands to fit text
+                    text_size: self.width, None  # Prevent text cutoff
+                    padding: "20dp", "0dp", "0dp", "0dp"
+                    halign: "left"
+                    valign: "top"
+                MDLabel: 
+                    text: "If a pump fails to run, the most likely causes are relay failure, wiring issues, or clogging. Begin by manually testing the pump to check if it powers on. If the pump hums but does not move fluid, check for airlocks or clogs in the tubing. Inspect the peristaltic tubes for wear or stiffness, which can hinder rotation. Also, ensure the relay module for the switching mechanism controlling the pump is functioning and receiving signals from the system. For systems with pump alternation, incorrect timekeeping or code logic may cause one pump to remain inactive."
+                    size_hint_y: None
+                    font_style: "Body1"
+                    height: self.texture_size[1]  # Ensure the label expands to fit text
+                    text_size: self.width, None  # Prevent text cutoff
+                    padding: "20dp", "0dp", "0dp", "0dp"
+                    halign: "left"
+                    valign: "top"
+                MDLabel: 
+                    text: "The core of an automated hydroponics system lies in its network of sensors. When values become inconsistent or clearly inaccurate, the first step is to check sensor cleanliness. Many sensors, especially pH and TDS require regular rinsing with distilled water to maintain accuracy. For ultrasonic and humidity sensors, clean the sensing face. If sensor readings are not updating, inspect the wiring for loose connections, and test the sensor using a multimeter. When multiple sensors fail at once, it could indicate a larger power or communication issue within the system restarting the controller and checking power supply integrity is recommended."
+                    size_hint_y: None
+                    font_style: "Body1"
+                    height: self.texture_size[1]  # Ensure the label expands to fit text
+                    text_size: self.width, None  # Prevent text cutoff
+                    padding: "20dp", "0dp", "0dp", "0dp"
+                    halign: "left"
+                    valign: "top"
+        MDRaisedButton:
+            text: "Continue"
+            theme_width: "Custom"
+            size_hint_x: 1
+            on_release: root.manager.current = "dashboard"
