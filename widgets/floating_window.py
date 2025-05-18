@@ -27,7 +27,7 @@ class FloatingWindow(MDFloatLayout):
         # Ensure imagesByFolder is a dictionary, not a list
         images_by_folder = result.get("imagesByFolder", {})
 
-        for folderName in images_by_folder.items():
+        for folderName, files in images_by_folder.items():
             # Create a button for each folder
             folder_button = MDRaisedButton(text=str(folderName))
             self.ids.grid.add_widget(folder_button)
