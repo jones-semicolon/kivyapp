@@ -23,6 +23,18 @@
                     size_hint: 1, None
                     pos_hint: {'center_x': .5, 'center_y': .5}
                     adaptive_height: True
+                    MDIconButton:
+                        icon: "arrow-left-top"
+                        id: back
+                        size_hint: None, None
+                        # Use 'user_font_size' or 'icon_size' to define the icon size
+                        user_font_size: "32sp"
+                        # Make the button the same size as the icon
+                        width: self.user_font_size
+                        height: self.user_font_size
+                        on_release: root.clear_layout()
+                        disabled: True
+                        opacity: 0
                     Widget:
                         size_hint_x: 1
                     # MDLabel:
@@ -54,10 +66,22 @@
                     size_hint_y: None
                     adaptive_height: True
                     height: root.width
-                    MDGridLayout:
-                        id: grid
+                    MDBoxLayout:
+                        orientation: "vertical"
                         adaptive_height: True
-                        cols: 2
-                        spacing: dp(10)
                         size_hint_x: 1
                         size_hint_y: None
+                        MDGridLayout:
+                            id: grid
+                            adaptive_height: True
+                            cols: 2
+                            spacing: dp(10)
+                            size_hint_x: 1
+                            size_hint_y: None
+                        MDBoxLayout:
+                            id: list
+                            orientation: "vertical"
+                            adaptive_height: True
+                            spacing: dp(10)
+                            size_hint_x: 1
+                            size_hint_y: None

@@ -10,6 +10,7 @@ class FloatingWindow(MDFloatLayout):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.load_images()
+        self.images_by_folder = None
 
     def load_images(self):
         url = f"{API_BASE_URL}/images/{FOLDER_ID}"
@@ -25,17 +26,39 @@ class FloatingWindow(MDFloatLayout):
     @mainthread
     def got_images(self, _, result):
         # Ensure imagesByFolder is a dictionary, not a list
-        images_by_folder = result.get("imagesByFolder", {})
+        self.images_by_folder = result.get("imagesByFolder", {})
+        self.clear_layout()
 
-        for folderName, files in images_by_folder.items():
+    def image_list(self, folderName):
+        if not folderName:
+            return
+
+        self.ids.grid.clear_widgets()
+        self.ids.list.clear_widgets()
+        self.ids.back.disabled = False
+        self.ids.back.opacity = 1
+
+        # Retrieve the list of files for the selected folder
+        files = self.images_by_folder.get(folderName, [])
+
+        for file in files:
+            tile = SmartTileFromURL(source=file["downloadUrl"])
+            self.ids.grid.add_widget(tile)
+
+    def clear_layout(self):
+        self.ids.grid.clear_widgets()
+        self.ids.list.clear_widgets()
+        self.ids.back.disabled = True
+        self.ids.back.opacity = 0
+
+        for folderName in self.images_by_folder:
             # Create a button for each folder
-            folder_button = MDRaisedButton(text=str(folderName))
-            self.ids.grid.add_widget(folder_button)
-
-            # # Add each file in the folder
-            # for file in files:
-            #     tile = SmartTileFromURL(source=file["downloadUrl"])
-            #     self.ids.grid.add_widget(tile)
+            folder_button = MDRaisedButton(text=str(folderName), size_hint=(1, 1))
+            # Bind the on_release event using a lambda to capture folderName
+            folder_button.bind(
+                on_release=lambda instance, fname=folderName: self.image_list(fname)
+            )
+            self.ids.list.add_widget(folder_button)
 
     @mainthread
     def on_error(self, _, error):
