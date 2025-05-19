@@ -22,6 +22,7 @@ class MainApp(MDApp):
         Builder.load_file("screens/kv/dashboard.kv")
         Builder.load_file("widgets/kv/floating_window.kv")
         Builder.load_file("screens/kv/introductions.kv")
+        Builder.load_file("screens/kv/sensor_screen.kv")
         Builder.load_file("widgets/kv/image.kv")
         Builder.load_file("widgets/kv/card.kv")
 

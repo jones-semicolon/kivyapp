@@ -6,6 +6,7 @@ from kivy.properties import (
     BooleanProperty,
 )
 from kivy.animation import Animation
+from kivy.app import App
 
 
 class CustomCircularCard(MDCard):
@@ -21,6 +22,23 @@ class CustomCircularCard(MDCard):
         anim = Animation(value=new_value, duration=duration, t="out_quad")
         anim.start(self)
 
+    def on_click(self):
+        app = App.get_running_app()
+        screen_manager = app.root
+
+        sensor_screen = screen_manager.get_screen("sensor")
+
+        # Assign values to the target screen's properties
+        sensor_screen.text = self.text
+        sensor_screen.unit = self.unit
+        sensor_screen.value = self.value
+        sensor_screen.max_value = self.max_value
+        sensor_screen.min_value = self.min_value
+        sensor_screen.color = self.color
+
+        # Switch to the target screen
+        screen_manager.current = "sensor"
+
 
 class CustomCard(MDCard):
     text = StringProperty()
@@ -34,3 +52,19 @@ class CustomCard(MDCard):
 
     def update_value(self, new_value):
         self.value = new_value
+
+    def on_click(self):
+        app = App.get_running_app()
+        screen_manager = app.root
+
+        sensor_screen = screen_manager.get_screen("sensor")
+
+        # Assign values to the target screen's properties
+        sensor_screen.text = self.text
+        sensor_screen.icon = self.icon
+        sensor_screen.value = self.value
+        sensor_screen.description = self.description
+        sensor_screen.color = self.color
+
+        # Switch to the target screen
+        screen_manager.current = "sensor"
