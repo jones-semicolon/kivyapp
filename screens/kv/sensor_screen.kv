@@ -1,16 +1,7 @@
-<SensorScreen>:
-    name: "sensor"  
-    # MDBottomNavigation:
-    #     text_color_active: "lightgrey"
-    #     height: dp(25)
-    #     MDBottomNavigationItem:
-    #         name: "dashboard"
-    #         text: "Dashboard"
-    #     MDBottomNavigationItem:
-    #         name: "camera"
-    #         text: "Camera"
+<SensorScreen>
+    name: "sensor"
     MDBoxLayout:
-        id: sensor
+        id: sensor 
         orientation: "vertical"
         padding: dp(20), dp(20)
         size_hint: 1, 1
@@ -20,138 +11,41 @@
             anchor_y: "top"
             MDBoxLayout:
                 orientation: "vertical"
-                size_hint: 1, 1
-                spacing: "10dp"
-                pos_hint: {'center_x': .5, 'center_y': .5}
-                # MDLabel:
-                #     text: "Hydrophonics Monitoring"
-                #     font_style: "H3"
-                #     halign: "center"    
-                #     valign: "center"
-                #     size_hint_y: None
-                #     height: self.texture_size[1] + dp(10)  
-                MDBoxLayout:
-                    orientation: "horizontal"
-                    size_hint_x: 1
+                adaptive_height: True
+                size_hint: 1, None
+                pos_hint: {"center_y": 0.5, "center_x": 0.5}
+                # radius: [dp(10)]
+                # md_bg_color: 1, 1, 1, 1
+                # canvas.before:
+                #     Color:
+                #         rgba: 0, 0, 0, 0.2  # Border color (Black with 20% opacity)
+                #     Line:
+                #         width: dp(1)  # Border thickness
+                #         rounded_rectangle: (self.x, self.y, self.width, self.height, dp(10))  # Rounded borders
+                
+                MDIconButton: 
+                    icon: "arrow-left-top"
+                    icon_size: "32sp"
                     size_hint_y: None
+                    on_release: root.manager.current = "dashboard"
+                MDBoxLayout:
+                    id: card
                     adaptive_height: True
-                    MDIconButton: 
-                        icon: "image-multiple"
+                    orientation: "horizontal"
+                    size_hint: 1, None
+                    padding: dp(30), dp(20)
+                    spacing: dp(10)
+                    MDLabel:
+                        text: root.text
+                        halign: "center"    
+                        valign: "center"
                         size_hint_y: None
-                        icon_size: "32sp"
-                        on_release:root.create_window()
-                    MDWidget:
-                        size_hint_x: 1
-                    MDIconButton: 
-                        icon: "account-circle"
-                        icon_size: "32sp"
-                        size_hint_y: None
-                        on_release: root.open_menu(self)
-                MDScrollView:
-                    do_scroll_x: False
-                    MDBoxLayout:
-                        orientation: "vertical"
-                        size_hint_x: 1
-                        adaptive_height: True
-                        spacing: dp(10)
-                        # MDBoxLayout:
-                        #     id: full_container
-                        #     orientation: "horizontal"
-                        #     size_hint_y: None
-                        #     size_hint_x: 1
-                        #     adaptive_height: True
-                        #     spacing: dp(10)
-                            # padding: dp(10), dp(10), dp(10), dp(10)
-                        MDGridLayout:
-                            id: container
-                            size_hint_y: None
-                            size_hint_x: 1
-                            spacing: dp(10)
-                            adaptive_height: True
-                            cols: 2
-                            col_default_width: (self.width / 2) - dp(5)
-                            col_force_default: True
-
-
-# <SensorScreen>
-#     name: "sensor"
-#     MDBoxLayout:
-#         id: sensor 
-#         orientation: "vertical"
-#         padding: dp(20), dp(20)
-#         size_hint: 1, 1
-#         pos_hint: {"center_y": 0.5}
-#         canvas.before:
-#             Color:
-#                 rgba: 1, 0, 0, 1  # Border color (Black with 20% opacity)
-#             Line:
-#                 width: dp(1)  # Border thickness
-#                 rounded_rectangle: (self.x, self.y, self.width, self.height, dp(10))  # Rounded borders
-#         MDAnchorLayout:
-#             anchor_x: "center"
-#             anchor_y: "top"
-#             MDBoxLayout:
-#                 orientation: "vertical"
-#                 ripple_behavior: True
-#                 adaptive_height: True
-#                 size_hint: 1, None
-#                 pos_hint: {"center_y": 0.5, "center_x": 0.5}
-#                 radius: [dp(10)]
-#                 md_bg_color: 1, 1, 1, 1
-#                 canvas.before:
-#                     Color:
-#                         rgba: 0, 0, 0, 0.2  # Border color (Black with 20% opacity)
-#                     Line:
-#                         width: dp(1)  # Border thickness
-#                         rounded_rectangle: (self.x, self.y, self.width, self.height, dp(10))  # Rounded borders
-#                 MDBoxLayout:
-#                     adaptive_height: True
-#                     orientation: "vertical"
-#                     size_hint: 1, None
-#                     padding: dp(30), dp(20)
-#                     spacing: dp(10)
-#                     AnchorLayout:
-#                         id: arc_layout  
-#                         size_hint: 1, None
-#                         height: self.width
-#                         canvas.before:
-#                             Color:
-#                                 rgba: root.color + [0.3]#root.bar_color + [0.3]
-#                             Line:
-#                                 width: dp(5)#root.bar_width
-#                                 ellipse: (self.x, self.y, self.width, self.height, 180, 360 + 90)
-#                         canvas.after:
-#                             Color:
-#                                 rgb: root.color #root.bar_color + [0.3]
-#                             Line:
-#                                 width: dp(5)#root.bar_width
-#                                 ellipse: (self.x, self.y, self.width, self.height, 180, ((root.value / root.max_value)  * 270) + 180)
-#                         MDBoxLayout:
-#                             orientation: "horizontal"
-#                             adaptive_height: True
-#                             adaptive_width: True
-#                             size_hint: None, None 
-#                             spacing: dp(2)
-#                             MDLabel:
-#                                 id: value_label
-#                                 text: str(root.value) #"1040 PPM"
-#                                 theme_text_color: "Hint"
-#                                 size_hint_x: None
-#                                 adaptive_width: True
-#                                 valign: "center"
-#                                 font_size: "18sp"
-#                             MDLabel:
-#                                 text: root.unit #"PPM"
-#                                 theme_text_color: "Hint"
-#                                 size_hint_x: None
-#                                 adaptive_width: True
-#                                 valign: "top"
-#                                 font_size: "8sp"
-#                     MDLabel:
-#                         text: root.text
-#                         halign: "center"    
-#                         size_hint_y: None
-#                         height: self.texture_size[1] # Adjust height dynamically
-#                         font_size: dp(12)
-#
-#
+                        height: self.texture_size[1]  # Adjust height dynamically
+                        font_size: dp(12)
+                        pos_hint: {"center_x": 0.5}
+                        canvas.before:
+                            Color:
+                                rgba: 0, 0, 0, 1 # Border color (Black with 20% opacity)
+                            Line:
+                                width: dp(1)  # Border thickness
+                                rounded_rectangle: (self.x, self.y, self.width, self.height, dp(10))  # Rounded borders

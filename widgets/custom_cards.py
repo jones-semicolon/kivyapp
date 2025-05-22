@@ -36,6 +36,7 @@ class CustomCircularCard(MDCard):
         sensor_screen.min_value = self.min_value
         sensor_screen.color = self.color
 
+        sensor_screen.update_content()
         # Switch to the target screen
         screen_manager.current = "sensor"
 
@@ -43,15 +44,16 @@ class CustomCircularCard(MDCard):
 class CustomCard(MDCard):
     text = StringProperty()
     icon = StringProperty()
-    value = BooleanProperty()
+    status = BooleanProperty()
     description = StringProperty()
     color = ListProperty([1, 1, 1])
+    disabled = BooleanProperty(True)
 
     def update_icon(self, new_icon):
         self.ids.icon_widget.icon = new_icon
 
     def update_value(self, new_value):
-        self.value = new_value
+        self.status = new_value
 
     def on_click(self):
         app = App.get_running_app()
@@ -62,9 +64,11 @@ class CustomCard(MDCard):
         # Assign values to the target screen's properties
         sensor_screen.text = self.text
         sensor_screen.icon = self.icon
-        sensor_screen.value = self.value
+        sensor_screen.status = self.status
         sensor_screen.description = self.description
         sensor_screen.color = self.color
+        sensor_screen.disabled = self.disabled
 
+        sensor_screen.update_content()
         # Switch to the target screen
         screen_manager.current = "sensor"

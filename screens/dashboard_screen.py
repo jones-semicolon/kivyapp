@@ -93,19 +93,20 @@ class DashboardScreen(MDScreen):
                 "icon": "sprout",
                 "text": "Status",
                 "key": "Status",
-                "value": True,
+                "status": True,
                 "description": f"Updated as of {self.formatted_time}",
                 "status-icon": {
                     "on": "sprout",
                     "off": "lightbulb-off-outline",
                 },
                 "color": [0.694, 1, 0.694],
+                "disabled": True,
             },
             {
                 "icon": "lightbulb-on-outline",
                 "text": "Grow Light",
                 "key": "Grow Light Status",
-                "value": str(self.data.get("Grow Light Status", "false")).lower()
+                "status": str(self.data.get("Grow Light Status", "false")).lower()
                 == "true",
                 "description": "6:00 AM - 6:00 PM",
                 "status-icon": {
@@ -113,16 +114,18 @@ class DashboardScreen(MDScreen):
                     "off": "lightbulb-off-outline",
                 },
                 "color": [1, 0.64, 0],
+                "disabled": False,
             },
         ]
 
         for light in light_data:
             card = CustomCard(
-                icon=light["icon"] if light["value"] else light["status-icon"]["off"],
+                icon=light["icon"] if light["status"] else light["status-icon"]["off"],
                 text=light["text"],
-                value=light["value"],
+                status=light["status"],
                 color=light["color"],
                 description=light["description"],
+                disabled=light["disabled"],
             )
             container.add_widget(card)
             self.light_cards[light["key"]] = card
@@ -172,17 +175,19 @@ class DashboardScreen(MDScreen):
                 "icon": "pump",
                 "text": "Left Pump Status",
                 "key": "Left Pump Status",
-                "value": str(self.data.get("Left Pump Status", "false")).lower()
+                "status": str(self.data.get("Left Pump Status", "false")).lower()
                 == "true",
                 "color": [1, 0.64, 0],
+                "disabled": False,
             },
             {
                 "icon": "pump",
                 "text": "Right Pump Status",
                 "key": "Right Pump Status",
-                "value": str(self.data.get("Right Pump Status", "false")).lower()
+                "status": str(self.data.get("Right Pump Status", "false")).lower()
                 == "true",
                 "color": [1, 0.64, 0],
+                "disabled": False,
             },
         ]
 
@@ -199,10 +204,11 @@ class DashboardScreen(MDScreen):
 
         for pump in pumps:
             card = CustomCard(
-                icon=pump["icon"] if pump["value"] else "pump-off",
+                icon=pump["icon"] if pump["status"] else "pump-off",
                 text=pump["text"],
-                value=pump["value"],
+                status=pump["status"],
                 color=pump["color"],
+                disabled=pump["disabled"],
             )
             container.add_widget(card)
             self.pump_cards[pump["key"]] = card

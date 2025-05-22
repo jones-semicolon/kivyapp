@@ -7,6 +7,7 @@
     md_bg_color: 1, 1, 1, 1
     padding: dp(20), dp(20), dp(20), dp(20)
     on_release: self.on_click()
+    disabled: self.disabled
     canvas.before:
         Color:
             rgba: 0, 0, 0, 0.2 # Border color (Black with 20% opacity)
@@ -25,7 +26,7 @@
             pos_hint: {"center_x": .5, "center_y": .5}
             font_size: dp(75) 
             theme_text_color: "Custom"
-            text_color: root.color + ([1] if root.value else [0.1])
+            text_color: root.color + ([1] if root.status else [0.1])
         MDBoxLayout:
             orientation: "vertical"
             size_hint: 1, None
