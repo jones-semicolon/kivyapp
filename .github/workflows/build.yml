@@ -14,14 +14,27 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.10
+
       - name: Install Dependencies
         run: |
           sudo apt update
-          sudo apt install -y git zip unzip python3-pip autoconf libtool pkg-config zlib1g-dev libncurses-dev cmake libffi-dev libssl-dev automake libltdl-dev
-          pip install --user --upgrade Cython virtualenv
-          pip install --user --upgrade buildozer
+          sudo apt install -y git zip unzip autoconf libtool pkg-config zlib1g-dev libncurses-dev cmake libffi-dev libssl-dev automake libltdl-dev
+          pip install --upgrade pip
+          pip install --user "Cython<3" virtualenv buildozer
+
           echo 'export PATH=$PATH:~/.local/bin/' >> ~/.bashrc
           source ~/.bashrc
+
+      - name: Clean Build Caches
+        run: |
+          buildozer android clean || true
+          rm -rf .buildozer
+          rm -rf bin
+          rm -rf ~/.local/share/python-for-android
 
       - name: Write GCP SA Key for App
         env:
@@ -35,14 +48,6 @@ jobs:
           export JAVA_HOME=/usr/lib/jvm/temurin-17-jdk-amd64
           sudo update-java-alternatives --set ${JAVA_HOME}
           export PATH=$JAVA_HOME/bin:$PATH
-
-          # Clean Buildozer and Python-for-Android caches
-          buildozer android clean || true
-          rm -rf .buildozer
-          rm -rf bin
-          rm -rf ~/.local/share/python-for-android
-
-          # Build the APK
           yes | buildozer -v android debug
 
       - name: Upload APK as Artifact
