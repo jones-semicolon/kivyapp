@@ -40,7 +40,6 @@ version = 0.1
 # comma separated e.g. requirements = sqlite3,kivy
 requirements = 
     python==3.11
-    buildozer==1.5.0,
     cachetools==5.5.2,
     certifi==2025.1.31,
     charset-normalizer==3.4.1,
@@ -70,11 +69,9 @@ requirements =
     pyasn1_modules==0.4.2,
     Pygments==2.19.1,
     pyparsing==3.2.3,
-    pypiwin32==223,
     requests==2.32.3,
     requests-oauthlib==2.0.0,
     rsa==4.9,
-    sh==2.2.2,
     uritemplate==4.1.1,
     urllib3==2.3.0,
     passlib,
