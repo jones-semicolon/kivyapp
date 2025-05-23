@@ -38,44 +38,7 @@ version = 0.1
 
 # (list) Application requirements
 # comma separated e.g. requirements = sqlite3,kivy
-requirements = 
-    python3==3.11
-    cachetools==5.5.2,
-    certifi==2025.1.31,
-    charset-normalizer==3.4.1,
-    distlib==0.3.9,
-    docutils==0.21.2,
-    filelock==3.18.0,
-    filetype==1.2.0,
-    google-api-core==2.24.2,
-    google-api-python-client==2.166.0,
-    google-auth==2.38.0,
-    google-auth-httplib2==0.2.0,
-    google-auth-oauthlib==1.2.1,
-    googleapis-common-protos==1.69.2,
-    httplib2==0.22.0,
-    idna==3.10,
-    Kivy==2.3.1,
-    Kivy-Garden==0.1.5,
-    kivymd==1.2.0,
-    oauthlib==3.2.2,
-    pexpect==4.9.0,
-    pillow==11.1.0,
-    platformdirs==4.3.7,
-    proto-plus==1.26.1,
-    protobuf==6.30.2,
-    ptyprocess==0.7.0,
-    pyasn1==0.6.1,
-    pyasn1_modules==0.4.2,
-    Pygments==2.19.1,
-    pyparsing==3.2.3,
-    requests==2.32.3,
-    requests-oauthlib==2.0.0,
-    rsa==4.9,
-    uritemplate==4.1.1,
-    urllib3==2.3.0,
-    passlib,
-    bcrypt==3.2.2,
+requirements = python3==3.11,kivy==2.3.1,kivymd==1.2.0,cachetools==5.5.2,certifi==2025.1.31,charset-normalizer==3.4.1,distlib==0.3.9,docutils==0.21.2,filelock==3.18.0,filetype==1.2.0,google-api-core==2.24.2,google-api-python-client==2.166.0,google-auth==2.38.0,google-auth-httplib2==0.2.0,google-auth-oauthlib==1.2.1,googleapis-common-protos==1.69.2,httplib2==0.22.0,idna==3.10,Kivy-Garden==0.1.5,oauthlib==3.2.2,pexpect==4.9.0,pillow==11.1.0,platformdirs==4.3.7,proto-plus==1.26.1,protobuf==6.30.2,ptyprocess==0.7.0,pyasn1==0.6.1,pyasn1_modules==0.4.2,Pygments==2.19.1,pyparsing==3.2.3,requests==2.32.3,requests-oauthlib==2.0.0,rsa==4.9,uritemplate==4.1.1,urllib3==2.3.0,passlib,bcrypt==3.2.2
 
 # (str) Custom source folders for requirements
 # Sets custom source for any requirements with recipes
