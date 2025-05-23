@@ -35,6 +35,14 @@ jobs:
           export JAVA_HOME=/usr/lib/jvm/temurin-17-jdk-amd64
           sudo update-java-alternatives --set ${JAVA_HOME}
           export PATH=$JAVA_HOME/bin:$PATH
+
+          # Clean Buildozer and Python-for-Android caches
+          buildozer android clean || true
+          rm -rf .buildozer
+          rm -rf bin
+          rm -rf ~/.local/share/python-for-android
+
+          # Build the APK
           yes | buildozer -v android debug
 
       - name: Upload APK as Artifact
