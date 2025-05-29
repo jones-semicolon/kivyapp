@@ -112,7 +112,7 @@ class DashboardScreen(MDScreen):
                     "on": "lightbulb-on-outline",
                     "off": "lightbulb-off-outline",
                 },
-                "color": [1, 0.64, 0],
+                "color": [0.11, 0.56, 0.8],
             },
         ]
 
@@ -136,7 +136,7 @@ class DashboardScreen(MDScreen):
                 "value": float(self.data.get("TDS") or 0),
                 "max_value": 1300,
                 "unit": "PPM",
-                "color": [0.8, 0.7, 0.5],
+                "color": [0.11, 0.56, 0.8],
             },
             {
                 "icon": "ph",
@@ -145,7 +145,7 @@ class DashboardScreen(MDScreen):
                 "value": float(self.data.get("pH Level") or 0),
                 "max_value": 7.0,
                 "unit": "pH",
-                "color": [0.31373, 0.78431, 0.47059],
+                "color": [0.11, 0.56, 0.8],
             },
             {
                 "icon": "weather-windy",
@@ -154,7 +154,7 @@ class DashboardScreen(MDScreen):
                 "value": float(self.data.get("Humidity") or 0),
                 "max_value": 100,
                 "unit": "%",
-                "color": [0, 0.74, 1],
+                "color": [0.11, 0.56, 0.8],
             },
             {
                 "icon": "waves-arrow-up",
@@ -174,7 +174,7 @@ class DashboardScreen(MDScreen):
                 "key": "Left Pump Status",
                 "status": str(self.data.get("Left Pump Status", "false")).lower()
                 == "true",
-                "color": [1, 0.64, 0],
+                "color": [0.11, 0.56, 0.8],
             },
             {
                 "icon": "pump",
@@ -182,7 +182,7 @@ class DashboardScreen(MDScreen):
                 "key": "Right Pump Status",
                 "status": str(self.data.get("Right Pump Status", "false")).lower()
                 == "true",
-                "color": [1, 0.64, 0],
+                "color": [0.11, 0.56, 0.8],
             },
         ]
 

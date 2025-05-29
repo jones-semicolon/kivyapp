@@ -4,6 +4,7 @@ from kivy.clock import mainthread
 from kivymd.uix.button import MDRaisedButton
 from widgets.smart_tile_from_url import SmartTileFromURL
 from constants import API_BASE_URL, FOLDER_ID
+from datetime import datetime
 
 
 class FloatingWindow(MDFloatLayout):
@@ -26,7 +27,27 @@ class FloatingWindow(MDFloatLayout):
     @mainthread
     def got_images(self, _, result):
         # Ensure imagesByFolder is a dictionary, not a list
-        self.images_by_folder = result.get("imagesByFolder", {})
+        raw_folders = result.get("imagesByFolder", {})
+
+        # Step 1: Sort folder names chronologically
+        sorted_folders = sorted(
+            raw_folders.items(), key=lambda item: datetime.strptime(item[0], "%m-%d-%Y")
+        )
+
+        # Step 2: Sort images inside each folder by timestamp in filename
+        def extract_timestamp(image):
+            try:
+                name_parts = image["name"].split("_")
+                timestamp_str = f"{name_parts[1]}_{name_parts[2]}"
+                return datetime.strptime(timestamp_str, "%Y-%m-%d_%H-%M-%S")
+            except Exception:
+                return datetime.min  # Fallback for bad format
+
+        self.images_by_folder = {
+            folder: sorted(images, key=extract_timestamp)
+            for folder, images in sorted_folders
+        }
+
         self.clear_layout()
 
     def image_list(self, folderName):
