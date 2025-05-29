@@ -1,6 +1,4 @@
 <SensorScale>
-    name: "sensor_scale"
-    id: card 
     size_hint: None, None
     width: root.width / 4
     height: self.width
@@ -37,15 +35,24 @@
             adaptive_width: True
             valign: "top"
             font_size: "8sp"
+    MDLabel:
+        text: root.text
+        halign: "center"    
+        valign: "center"
+        size_hint_y: None
+        height: self.texture_size[1]  # Adjust height dynamically
+        font_size: dp(12)
+        pos_hint: {"center_x": 0.5}
+        canvas.before:
+            Color:
+                rgba: 0, 0, 0, 1 # Border color (Black with 20% opacity)
+            Line:
+                width: dp(1)  # Border thickness
+                rounded_rectangle: (self.x, self.y, self.width, self.height, dp(10))  # Rounded borders
 
 
 
 <SensorIcon>
-    name: "sensor_icon"
-    id: card  
-    size_hint: None, None
-    width: root.width / 4
-    height: self.width
     MDIcon:
         id: icon_widget
         icon: root.icon #"landslide"
@@ -70,3 +77,17 @@
             halign: "center"
             font_size: "9sp"
             disabled: True
+    MDLabel:
+        text: root.text
+        halign: "center"    
+        valign: "center"
+        size_hint_y: None
+        height: self.texture_size[1]  # Adjust height dynamically
+        font_size: dp(12)
+        pos_hint: {"center_x": 0.5}
+        canvas.before:
+            Color:
+                rgba: 0, 0, 0, 1 # Border color (Black with 20% opacity)
+            Line:
+                width: dp(1)  # Border thickness
+                rounded_rectangle: (self.x, self.y, self.width, self.height, dp(10))  # Rounded borders

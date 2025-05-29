@@ -19,7 +19,7 @@ class FloatingWindow(MDFloatLayout):
             on_success=self.got_images,
             on_error=self.on_error,
             on_failure=self.on_error,
-            timeout=10,
+            timeout=30,
             decode=True,
         )
 

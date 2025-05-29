@@ -19,20 +19,20 @@ class SensorScreen(MDScreen):
     max_value = NumericProperty(1)
     min_value = NumericProperty(0)
     color = ListProperty([1, 1, 1])
-    icon = StringProperty()
-    status = BooleanProperty()
+    icon = StringProperty("")
+    status = BooleanProperty("")
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        Clock.schedule_once(self.update_content)
 
-    def update_content(self, dt=None):
-        self.ids.card.clear_widgets()
-        if self.icon:
+    def update_content(self):
+        # self.ids.card.clear_widgets()
+        if self.icon and self.icon.strip():
             widget = SensorIcon(
                 text=self.text, icon=self.icon, color=self.color, status=self.status
             )
         else:
+            print(self.value)
             widget = SensorScale(
                 text=self.text,
                 unit=self.unit,
@@ -41,3 +41,13 @@ class SensorScreen(MDScreen):
                 color=self.color,
             )
         self.ids.card.add_widget(widget)
+
+    def clear_wid(self):
+        self.text = ""
+        self.unit = ""
+        self.value = 0
+        self.max_value = 0
+        self.min_value = 0
+        self.color = [1, 1, 1]
+        self.icon = ""
+        self.status = ""

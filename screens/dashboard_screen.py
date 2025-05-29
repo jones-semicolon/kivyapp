@@ -100,7 +100,6 @@ class DashboardScreen(MDScreen):
                     "off": "lightbulb-off-outline",
                 },
                 "color": [0.694, 1, 0.694],
-                "disabled": True,
             },
             {
                 "icon": "lightbulb-on-outline",
@@ -114,7 +113,6 @@ class DashboardScreen(MDScreen):
                     "off": "lightbulb-off-outline",
                 },
                 "color": [1, 0.64, 0],
-                "disabled": False,
             },
         ]
 
@@ -125,7 +123,6 @@ class DashboardScreen(MDScreen):
                 status=light["status"],
                 color=light["color"],
                 description=light["description"],
-                disabled=light["disabled"],
             )
             container.add_widget(card)
             self.light_cards[light["key"]] = card
@@ -178,7 +175,6 @@ class DashboardScreen(MDScreen):
                 "status": str(self.data.get("Left Pump Status", "false")).lower()
                 == "true",
                 "color": [1, 0.64, 0],
-                "disabled": False,
             },
             {
                 "icon": "pump",
@@ -187,7 +183,6 @@ class DashboardScreen(MDScreen):
                 "status": str(self.data.get("Right Pump Status", "false")).lower()
                 == "true",
                 "color": [1, 0.64, 0],
-                "disabled": False,
             },
         ]
 
@@ -208,7 +203,6 @@ class DashboardScreen(MDScreen):
                 text=pump["text"],
                 status=pump["status"],
                 color=pump["color"],
-                disabled=pump["disabled"],
             )
             container.add_widget(card)
             self.pump_cards[pump["key"]] = card

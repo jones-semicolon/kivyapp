@@ -35,17 +35,60 @@
                     size_hint: 1, None
                     padding: dp(30), dp(20)
                     spacing: dp(10)
-                    MDLabel:
-                        text: root.text
-                        halign: "center"    
-                        valign: "center"
-                        size_hint_y: None
-                        height: self.texture_size[1]  # Adjust height dynamically
-                        font_size: dp(12)
-                        pos_hint: {"center_x": 0.5}
+                    canvas.before:
+                        Color:
+                            rgba: 1, 0, 0, 1  # Border color (Black with 20% opacity)
+                        Line:
+                            width: dp(2)  # Border thickness
+                            rounded_rectangle: (self.x, self.y, self.width, self.height, dp(10))  # Rounded borders
+                    AnchorLayout:
+                        size_hint: None, None
+                        width: root.width / 4
+                        height: self.width
                         canvas.before:
                             Color:
-                                rgba: 0, 0, 0, 1 # Border color (Black with 20% opacity)
+                                rgba: root.color + [0.3]#root.bar_color + [0.3]
                             Line:
-                                width: dp(1)  # Border thickness
-                                rounded_rectangle: (self.x, self.y, self.width, self.height, dp(10))  # Rounded borders
+                                width: dp(3)#root.bar_width
+                                ellipse: (self.x, self.y, self.width, self.height, 180, 360 + 90)
+                        canvas.after:
+                            Color:
+                                rgb: root.color #root.bar_color + [0.3]
+                            Line:
+                                width: dp(3)#root.bar_width
+                                ellipse: (self.x, self.y, self.width, self.height, 180, ((root.value / root.max_value)  * 270) + 180)
+                        MDBoxLayout:
+                            orientation: "horizontal"
+                            adaptive_height: True
+                            adaptive_width: True
+                            size_hint: None, None 
+                            spacing: dp(2)
+                            MDLabel:
+                                id: value_label
+                                text: str(root.value) #"1040 PPM"
+                                theme_text_color: "Hint"
+                                size_hint_x: None
+                                adaptive_width: True
+                                valign: "center"
+                                font_size: "18sp"
+                            MDLabel:
+                                text: root.unit #"PPM"
+                                theme_text_color: "Hint"
+                                size_hint_x: None
+                                adaptive_width: True
+                                valign: "top"
+                                font_size: "8sp"
+                        MDLabel:
+                            text: root.text
+                            halign: "center"    
+                            valign: "center"
+                            size_hint_y: None
+                            height: self.texture_size[1]  # Adjust height dynamically
+                            font_size: dp(12)
+                            pos_hint: {"center_x": 0.5}
+                            canvas.before:
+                                Color:
+                                    rgba: 0, 0, 0, 1 # Border color (Black with 20% opacity)
+                                Line:
+                                    width: dp(1)  # Border thickness
+                                    rounded_rectangle: (self.x, self.y, self.width, self.height, dp(10))  # Rounded borders
