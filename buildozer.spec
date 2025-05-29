@@ -39,7 +39,6 @@ version = 0.1
 # (list) Application requirements
 # comma separated e.g. requirements = sqlite3,kivy
 requirements = 
-    python==3.11
     buildozer==1.5.0,
     cachetools==5.5.2,
     certifi==2025.1.31,
