@@ -11,8 +11,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
+      - name: Clean Buildozer cache
+        run: |
+          rm -rf ~/.buildozer
+          rm -rf .buildozer
+            - name: Checkout Repository
+              uses: actions/checkout@v2
 
       - name: Install Dependencies
         run: |
