@@ -123,6 +123,7 @@ class DashboardScreen(MDScreen):
                 status=light["status"],
                 color=light["color"],
                 description=light["description"],
+                border=True,
             )
             container.add_widget(card)
             self.light_cards[light["key"]] = card
@@ -193,6 +194,7 @@ class DashboardScreen(MDScreen):
                 max_value=sensor["max_value"],
                 unit=sensor["unit"],
                 color=sensor["color"],
+                border=True,
             )
             container.add_widget(card)
             self.sensor_cards[sensor["key"]] = card
@@ -203,6 +205,7 @@ class DashboardScreen(MDScreen):
                 text=pump["text"],
                 status=pump["status"],
                 color=pump["color"],
+                border=True,
             )
             container.add_widget(card)
             self.pump_cards[pump["key"]] = card

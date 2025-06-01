@@ -16,6 +16,7 @@ class CustomCircularCard(MDCard):
     max_value = NumericProperty(1)
     min_value = NumericProperty(0)
     color = ListProperty([1, 1, 1])
+    border = BooleanProperty(True)
 
     def animate_value(self, new_value, duration=0.5):
         Animation.cancel_all(self, "value")
@@ -48,6 +49,7 @@ class CustomCard(MDCard):
     status = BooleanProperty()
     description = StringProperty()
     color = ListProperty([1, 1, 1])
+    border = BooleanProperty(True)
 
     def update_icon(self, new_icon):
         self.ids.icon_widget.icon = new_icon

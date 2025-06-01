@@ -8,6 +8,7 @@ from kivy.properties import (
 )
 from kivy.lang import Builder
 from widgets.sensor_widgets import SensorScale, SensorIcon
+from widgets.custom_cards import CustomCard, CustomCircularCard
 from kivymd.uix.boxlayout import MDBoxLayout
 from kivy.clock import Clock
 
@@ -21,26 +22,39 @@ class SensorScreen(MDScreen):
     color = ListProperty([1, 1, 1])
     icon = StringProperty("")
     status = BooleanProperty("")
+    description = StringProperty("")
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
     def update_content(self):
-        # self.ids.card.clear_widgets()
+        self.ids.card.clear_widgets()
         if self.icon and self.icon.strip():
-            widget = SensorIcon(
-                text=self.text, icon=self.icon, color=self.color, status=self.status
+            widget = CustomCard(
+                text=self.text,
+                icon=self.icon,
+                color=self.color,
+                status=self.status,
+                ripple_behavior=False,
+                description=self.description,
+                border=False,
             )
         else:
-            print(self.value)
-            widget = SensorScale(
+            widget = CustomCircularCard(
                 text=self.text,
                 unit=self.unit,
                 value=self.value,
                 max_value=self.max_value,
                 color=self.color,
+                ripple_behavior=False,
+                border=False,
             )
+        widget.unbind(
+            on_release=widget.on_click
+        )  # optional: unbind if auto-bound in your class
+        widget.bind(on_release=lambda *args: None)  # bind a no-op
         self.ids.card.add_widget(widget)
+        self.clear_wid()
 
     def clear_wid(self):
         self.text = ""
