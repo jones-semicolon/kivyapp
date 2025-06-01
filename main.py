@@ -25,7 +25,6 @@ class MainApp(MDApp):
         Builder.load_file("screens/kv/sensor_screen.kv")
         Builder.load_file("widgets/kv/image.kv")
         Builder.load_file("widgets/kv/card.kv")
-        Builder.load_file("widgets/kv/sensor_widgets.kv")
 
         sm = MDScreenManager()
         sm.add_widget(LoginScreen(name="login"))

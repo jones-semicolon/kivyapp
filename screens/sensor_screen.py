@@ -7,7 +7,6 @@ from kivy.properties import (
     BooleanProperty,
 )
 from kivy.lang import Builder
-from widgets.sensor_widgets import SensorScale, SensorIcon
 from widgets.custom_cards import CustomCard, CustomCircularCard
 from kivymd.uix.boxlayout import MDBoxLayout
 from kivy.clock import Clock
@@ -49,10 +48,6 @@ class SensorScreen(MDScreen):
                 ripple_behavior=False,
                 border=False,
             )
-        widget.unbind(
-            on_release=widget.on_click
-        )  # optional: unbind if auto-bound in your class
-        widget.bind(on_release=lambda *args: None)  # bind a no-op
         self.ids.card.add_widget(widget)
         self.clear_wid()
 
